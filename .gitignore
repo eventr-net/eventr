@@ -1,6 +1,3 @@
-
-# Created by https://www.gitignore.io/api/git,csharp,visualstudio,visualstudiocode
-
 ### Csharp ###
 
 # User-specific files
@@ -26,8 +23,6 @@ bld/
 
 # Visual Studio 2015 cache/options directory
 .vs/
-# Uncomment if you have tasks that create the project's static files in wwwroot
-#wwwroot/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -46,6 +41,7 @@ dlldata.c
 project.lock.json
 project.fragment.lock.json
 artifacts/
+test-results/
 **/Properties/launchSettings.json
 
 *_i.c
@@ -73,9 +69,6 @@ artifacts/
 *.svclog
 *.scc
 
-# Chutzpah Test files
-_Chutzpah*
-
 # Visual C++ cache files
 ipch/
 *.aps
@@ -96,16 +89,10 @@ ipch/
 # TFS 2012 Local Workspace
 $tf/
 
-# Guidance Automation Toolkit
-*.gpState
-
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
-
-# JustCode is a .NET coding add-in
-.JustCode
 
 # TeamCity is a build add-in
 _TeamCity*
@@ -122,28 +109,8 @@ _NCrunch_*
 .*crunch*.local.xml
 nCrunchTemp_*
 
-# MightyMoose
-*.mm.*
-AutoTest.Net/
-
 # Web workbench (sass)
 .sass-cache/
-
-# Installshield output folder
-[Ee]xpress/
-
-# DocProject is a documentation generator add-in
-DocProject/buildhelp/
-DocProject/Help/*.HxT
-DocProject/Help/*.HxC
-DocProject/Help/*.hhc
-DocProject/Help/*.hhk
-DocProject/Help/*.hhp
-DocProject/Help/Html2
-DocProject/Help/html
-
-# Click-Once directory
-publish/
 
 # Publish Web Output
 *.[Pp]ublish.xml
@@ -197,9 +164,6 @@ ClientBin/
 *.publishsettings
 orleans.codegen.cs
 
-# RIA/Silverlight projects
-Generated_Code/
-
 # Backup & report files from converting an old project file
 # to a newer Visual Studio version. Backup files are not needed,
 # because we have git ;-)
@@ -213,16 +177,8 @@ UpgradeLog*.htm
 *.ldf
 *.ndf
 
-# Business Intelligence projects
-*.rdl.data
-*.bim.layout
-*.bim_*.settings
-
 # Microsoft Fakes
 FakesAssemblies/
-
-# GhostDoc plugin setting file
-*.GhostDoc.xml
 
 # Node.js Tools for Visual Studio
 .ntvs_analysis.dat
@@ -231,30 +187,9 @@ node_modules/
 # Typescript v1 declaration files
 typings/
 
-# Visual Studio 6 build log
-*.plg
-
-# Visual Studio 6 workspace options file
-*.opt
-
-# Visual Studio 6 auto-generated workspace file (contains which files were open etc.)
-*.vbw
-
-# Visual Studio LightSwitch build output
-**/*.HTMLClient/GeneratedArtifacts
-**/*.DesktopClient/GeneratedArtifacts
-**/*.DesktopClient/ModelManifest.xml
-**/*.Server/GeneratedArtifacts
-**/*.Server/ModelManifest.xml
-_Pvt_Extensions
-
 # Paket dependency manager
 .paket/paket.exe
 paket-files/
-
-# JetBrains Rider
-.idea/
-*.sln.iml
 
 # CodeRush
 .cr/
@@ -262,9 +197,13 @@ paket-files/
 ### Git ###
 *.orig
 
-# Cake
+### Cake ###
 tools/**
 !tools/packages.config
+
+### JetBrains Rider ###
+.idea/
+*.sln.iml
 
 ### VisualStudioCode ###
 .vscode/*

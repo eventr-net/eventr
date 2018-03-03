@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/bin/": true,
+        "**/obj/": true,
+        "**/LICENSE": true
+    },
+    "dotnet-test-explorer.testProjectPath": "test/EventR.Tests",
+    "dotnet-test-explorer.useTreeView": true,
+    "dotnet-test-explorer.build": false,
+    "dotnet-test-explorer.restore": false
+}
