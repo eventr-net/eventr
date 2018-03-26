@@ -194,5 +194,25 @@
         {
             return id1.ToGuid() != id2.ToGuid();
         }
+
+        public static bool operator >(TimeGuid id1, TimeGuid id2)
+        {
+            return id1.CompareTo(id2) > 0;
+        }
+
+        public static bool operator <(TimeGuid id1, TimeGuid id2)
+        {
+            return id1.CompareTo(id2) < 0;
+        }
+
+        public static bool operator >=(TimeGuid id1, TimeGuid id2)
+        {
+            return id1.CompareTo(id2) >= 0;
+        }
+
+        public static bool operator <=(TimeGuid id1, TimeGuid id2)
+        {
+            return id1.CompareTo(id2) <= 0;
+        }
     }
 }

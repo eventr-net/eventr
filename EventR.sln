@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7646BB2B-6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventR.Tests", "test\EventR.Tests\EventR.Tests.csproj", "{ABC814E4-D2B8-4DB6-96E4-DB76969D319D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventR.MS.Tests", "test\EventR.MS.Tests\EventR.MS.Tests.csproj", "{51B0D2FE-D1EF-48F6-8A50-B929448DF510}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

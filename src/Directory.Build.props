@@ -1,0 +1,26 @@
+<Project>
+  <PropertyGroup>
+    <SemVer Condition="'$(SemVer)' == ''">0.1.0-alpha</SemVer>
+    <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
+    <GitCommit Condition="'$(GitCommit)' == ''">unknown</GitCommit>
+    <GitBranch Condition="'$(GitBranch)' == ''">unknown</GitBranch>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageVersion>$(SemVer)</PackageVersion>
+    <IsPackable>true</IsPackable>
+    <PackageProjectUrl>https://eventr-net.github.io</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/eventr-net/eventr</RepositoryUrl>
+    <PackageIconUrl>https://eventr-net.github.io/icon_64x64.png</PackageIconUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/eventr-net/eventr/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>event-sourcing; database</PackageTags>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright (c) 2018 Jan Dvorak</Copyright>
+    <Authors>Jan Dvorak</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\default.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+</Project>

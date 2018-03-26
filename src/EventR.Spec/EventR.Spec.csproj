@@ -12,9 +12,13 @@
   </ItemGroup>
 
   <PropertyGroup>
+    <Description>
+      EventR is an event-sourcing presistence library available as netstandard2.
+      This packages contains sets of tests that implementations of either serialization or persistence must pass.
+    </Description>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <CodeAnalysisRuleSet>..\default.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
+
+  <!-- ../Directory.Build.props is merged automatically with this file -->
 
 </Project>
