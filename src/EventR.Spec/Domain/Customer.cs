@@ -23,9 +23,9 @@ namespace EventR.Spec.Domain
         public ICollection<Order> Orders { get; set; }
 
         [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
-        public bool Archived { get; set; }
+        public bool IsTerminated { get; set; }
 
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
-        public ArchiveReason ArchiveReason { get; set; }
+        public TerminateReason TerminateReason { get; set; }
     }
 }

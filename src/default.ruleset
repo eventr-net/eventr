@@ -18,6 +18,7 @@
     <Rule Id="SA1101" Action="None" /><!-- PrefixLocalCallsWithThis -->
     <Rule Id="SA1108" Action="None" /><!-- BlockStatementsMustNotContainEmbeddedComments -->
     <Rule Id="SA1124" Action="None" /><!-- DoNotUseRegions -->
+    <Rule Id="SA1402" Action="None" /><!-- FileMayOnlyContainASingleClass -->
     <Rule Id="SA1502" Action="None" /><!-- ElementMustNotBeOnASingleLine -->
     <Rule Id="SA1512" Action="None" /><!-- SingleLineCommentsMustNotBeFollowedByBlankLine -->
     <Rule Id="SA1515" Action="None" /><!-- SingleLineCommentsMustBePrecededByBlankLine -->

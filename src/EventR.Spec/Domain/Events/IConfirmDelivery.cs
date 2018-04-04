@@ -4,7 +4,7 @@ namespace EventR.Spec.Domain.Events
 
     public interface IConfirmDelivery
     {
-        string OrderId { get; set; }
+        Guid OrderId { get; set; }
 
         DateTimeOffset Date { get; set; }
 

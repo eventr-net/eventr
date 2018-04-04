@@ -1,9 +1,11 @@
-namespace EventR.Spec.Domain.Events
+﻿namespace EventR.Spec.Domain.Events
 {
     using System;
 
-    public interface IAcceptOrder
+    public interface IPlaceOrder
     {
+        Guid Id { get; set; }
+
         DateTimeOffset Date { get; set; }
 
         ShoppingCart ShoppingCart { get; set; }

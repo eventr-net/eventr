@@ -1,9 +1,9 @@
-namespace EventR.Spec.Domain
+﻿namespace EventR.Spec.Domain
 {
     using System.Runtime.Serialization;
 
     [DataContract]
-    public enum ArchiveReason
+    public enum TerminateReason
     {
         None = 0,
 

@@ -7,7 +7,7 @@ namespace EventR.Spec.Domain
     public sealed class DeliveryReceipt
     {
         [DataMember(Order = 1, IsRequired = true)]
-        public string OrderId { get; set; }
+        public Guid OrderId { get; set; }
 
         [DataMember(Order = 2, IsRequired = true)]
         public DateTimeOffset Delivered { get; set; }

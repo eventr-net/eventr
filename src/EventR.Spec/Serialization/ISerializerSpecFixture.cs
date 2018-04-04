@@ -1,4 +1,4 @@
-namespace EventR.Spec
+namespace EventR.Spec.Serialization
 {
     using System;
     using EventR.Abstractions;
@@ -6,6 +6,8 @@ namespace EventR.Spec
     public interface ISerializerSpecFixture : IDisposable
     {
         ISerializeEvents Serializer { get; }
+
+        object[] EventsFromDomain();
 
         string Description { get; }
     }

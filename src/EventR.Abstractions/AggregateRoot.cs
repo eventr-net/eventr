@@ -18,12 +18,14 @@
             Expect.NotNull(services, nameof(services));
 
             StreamId = streamId;
+            Data = new T();
             uncommitedEvents = new List<object>();
             this.services = services;
         }
 
         private readonly List<object> uncommitedEvents;
         private readonly IAggregateRootServices services;
+        private readonly object dataWriteLock = new object();
 
         public string StreamId { get; }
 
@@ -50,9 +52,12 @@
 
             var @event = services.EventFactory.Create(eventSetUpExpr);
             var handle = services.EventHandlerRegistry.GetHandler(this, @event.GetType());
-            handle(@event);
-            ++CurrentVersion;
-            uncommitedEvents.Add(@event);
+            lock (dataWriteLock)
+            {
+                handle(@event);
+                ++CurrentVersion;
+                uncommitedEvents.Add(@event);
+            }
         }
 
         /// <summary>
@@ -62,12 +67,19 @@
 
         internal void MarkAsCommited()
         {
-            uncommitedEvents.Clear();
+            lock (dataWriteLock)
+            {
+                uncommitedEvents.Clear();
+            }
         }
 
         internal void MarkAsDeleted()
         {
-            CurrentVersion = 0;
+            lock (dataWriteLock)
+            {
+                uncommitedEvents.Clear();
+                CurrentVersion = 0;
+            }
         }
 
         internal bool HasUncommitedEvents => uncommitedEvents.Any();
@@ -82,13 +94,16 @@
                 throw new InvalidOperationException("cannot hydrate aggregate which contains uncommited events");
             }
 
-            foreach (var e in load.Events)
+            lock (dataWriteLock)
             {
-                var handle = services.EventHandlerRegistry.GetHandler(this, e.GetType());
-                handle(e);
-            }
+                foreach (var e in load.Events)
+                {
+                    var handle = services.EventHandlerRegistry.GetHandler(this, e.GetType());
+                    handle(e);
+                }
 
-            CurrentVersion = load.Version;
+                CurrentVersion = load.Version;
+            }
         }
     }
 }

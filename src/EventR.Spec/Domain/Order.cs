@@ -24,5 +24,7 @@ namespace EventR.Spec.Domain
 
         [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
         public DeliveryReceipt DeliveryReceipt { get; set; }
+
+        public bool IsDelivered => DeliveryReceipt != null;
     }
 }
