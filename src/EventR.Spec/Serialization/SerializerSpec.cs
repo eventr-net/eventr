@@ -82,7 +82,6 @@ namespace EventR.Spec.Serialization
             var events = sut.Deserialize(commit);
             Assert.True(events != null && events.Length == 1, CreateMessage("1 event in response"));
 
-            // ReSharper disable once PossibleNullReferenceException
             var actual = (TestCase)events[0];
             var result = Comparer.Compare(expected, actual);
             Assert.True(result.AreEqual, CreateMessage(result.DifferencesString));
@@ -100,7 +99,6 @@ namespace EventR.Spec.Serialization
             var events = sut.Deserialize(commit);
             Assert.True(events != null && events.Length == 2, CreateMessage("2 events in response"));
 
-            // ReSharper disable once PossibleNullReferenceException
             foreach (TestCase actual in events)
             {
                 var result = Comparer.Compare(expected, actual);
@@ -147,7 +145,7 @@ namespace EventR.Spec.Serialization
             }
         }
 
-        private string CreateMessage(string originalMessage, params object[] args)
+        protected virtual string CreateMessage(string originalMessage, params object[] args)
         {
             var append = $" ; using fixture {typeof(T).Name} configured as {Fixture.Description}";
             return args != null && args.Length > 0

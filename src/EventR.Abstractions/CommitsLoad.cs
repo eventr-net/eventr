@@ -16,5 +16,7 @@
         public Commit[] Commits { get; }
 
         public int Version { get; }
+
+        public bool IsEmpty => Commits.Length == 0 || Version == 0;
     }
 }

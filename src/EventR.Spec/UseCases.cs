@@ -49,6 +49,21 @@
             return actions;
         }
 
+        public static CustomerAggregate AsDirtyCustomerAggregate(
+            this ICollection<Action<CustomerAggregate>> useCase,
+            IAggregateRootServices services,
+            string streamId = null)
+        {
+            var id = streamId ?? Guid.NewGuid().ToString("N");
+            var r = new CustomerAggregate(id, services);
+            foreach (var action in useCase)
+            {
+                action(r);
+            }
+
+            return r;
+        }
+
         public static readonly ShoppingCart Cart1 = new ShoppingCart
         {
             Items = new ShoppingCartItem[]

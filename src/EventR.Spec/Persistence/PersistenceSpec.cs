@@ -96,7 +96,6 @@ namespace EventR.Spec.Persistence
         }
 
         [Fact]
-        [SuppressMessage("Microsoft.ApiDesignGuidelines.Analyzers", "CA2007:DoNotDirectlyAwaitATask", Justification = "not really awaited")]
         public async Task ShouldNotAllowSavingCommitsWithSameStreamIdAndVersion()
         {
             var commits = Data.CreateValidCommits(2);
@@ -135,7 +134,6 @@ namespace EventR.Spec.Persistence
 
         [Theory]
         [MemberData(nameof(Data.InvalidCommits), MemberType = typeof(Data))]
-        [SuppressMessage("Microsoft.ApiDesignGuidelines.Analyzers", "CA2007:DoNotDirectlyAwaitATask", Justification = "not really awaited")]
         public async Task InvalidCommitsShouldBeRejected(Commit invalidCommit)
         {
             var sut = Fixture.Persistence;
@@ -146,7 +144,6 @@ namespace EventR.Spec.Persistence
         }
 
         [Fact]
-        [SuppressMessage("Microsoft.ApiDesignGuidelines.Analyzers", "CA2007:DoNotDirectlyAwaitATask", Justification = "not really awaited")]
         public async Task SaveCommitShouldThrowOnNullArg()
         {
             var sut = Fixture.Persistence;
@@ -157,7 +154,6 @@ namespace EventR.Spec.Persistence
         }
 
         [Fact]
-        [SuppressMessage("Microsoft.ApiDesignGuidelines.Analyzers", "CA2007:DoNotDirectlyAwaitATask", Justification = "not really awaited")]
         public async Task LoadCommitsShouldThrowOnNullArg()
         {
             var sut = Fixture.Persistence;
