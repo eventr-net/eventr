@@ -1,4 +1,4 @@
-namespace EventR.Spec
+﻿namespace EventR.Spec
 {
     using System;
     using System.Linq;
@@ -7,19 +7,20 @@ namespace EventR.Spec
 
     public static class AssertException
     {
-        public static async Task Is<T>(Func<Task> blockOfCode, Func<T, bool> check = null)
+        public static async Task Is<T>(Func<Task> blockOfCode, Func<T, bool> check = null, int testIndex = -1)
             where T : Exception
         {
             var exName = typeof(T).Name;
+            var testIndexSuffix = testIndex > -1 ? $" Test index: {testIndex}." : string.Empty;
             try
             {
                 await blockOfCode().ConfigureAwait(false);
 
-                Assert.True(false, $"{exName} has not been thrown");
+                Assert.True(false, $"{exName} has not been thrown.{testIndexSuffix}");
             }
             catch (T ex)
             {
-                Check(ex, check);
+                Check(ex, $"{exName} does not meet expected criteria.{testIndexSuffix}", check);
             }
             catch (AggregateException aggEx)
             {
@@ -29,7 +30,7 @@ namespace EventR.Spec
                     throw;
                 }
 
-                Check(ex, check, $"{exName} found within AggregateException, but does not meet expected criteria");
+                Check(ex, $"{exName} found within AggregateException, but does not meet expected criteria.{testIndexSuffix}", check);
             }
         }
 
@@ -44,13 +45,12 @@ namespace EventR.Spec
             return aggEx.Flatten().InnerExceptions.FirstOrDefault(x => x is T) as T;
         }
 
-        private static void Check<T>(T ex, Func<T, bool> check = null, string customMsg = null)
+        private static void Check<T>(T ex, string message, Func<T, bool> check = null)
             where T : Exception
         {
             if (check != null && !check(ex))
             {
-                var msg = customMsg ?? $"{typeof(T).Name} has been thrown, but does not meet expected criteria";
-                Assert.True(false, msg);
+                Assert.True(false, message);
             }
         }
     }

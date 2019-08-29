@@ -2,11 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
 
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "otherwise cluter")]
+#pragma warning disable SA1402 // File may only contain a single type
     public static class Data
     {
         public static IEnumerable<object[]> Tests()
@@ -300,4 +299,6 @@
         {
         }
     }
+
+    #pragma warning restore
 }

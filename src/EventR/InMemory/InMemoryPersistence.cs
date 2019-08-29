@@ -2,7 +2,7 @@
 {
     using System.Diagnostics.CodeAnalysis;
     using EventR.Abstractions;
-    using Storage = System.Collections.Generic.Dictionary<string, System.Collections.Generic.SortedList<int, Abstractions.Commit>>;
+    using Storage = System.Collections.Generic.Dictionary<string, System.Collections.Generic.SortedList<int, EventR.Abstractions.Commit>>;
 
     public sealed class InMemoryPersistence : IPersistence
     {

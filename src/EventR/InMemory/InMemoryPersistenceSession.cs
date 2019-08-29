@@ -1,12 +1,13 @@
 ﻿namespace EventR.InMemory
 {
     using EventR.Abstractions;
+    using EventR.Abstractions.Exceptions;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Transactions;
-    using Storage = System.Collections.Generic.Dictionary<string, System.Collections.Generic.SortedList<int, Abstractions.Commit>>;
     using Stage = System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<int>>;
+    using Storage = System.Collections.Generic.Dictionary<string, System.Collections.Generic.SortedList<int, EventR.Abstractions.Commit>>;
 
     public sealed class InMemoryPersistenceSession : IPersistenceSession
     {

@@ -1,29 +1,26 @@
 ﻿namespace EventR
 {
-    using App.Metrics;
     using EventR.Abstractions;
-    using Microsoft.Extensions.Logging;
+    using EventR.Abstractions.Telemetry;
 
     public sealed class EventStore : IEventStore
     {
         public EventStore(
             IPersistence persistence,
             IProvideSerializers serializersProvider,
-            IMetrics metrics,
-            ILoggerFactory loggerFactory)
+            ITelemetry telemetry)
         {
-            Expect.NotNull(persistence, "persistence");
-            Expect.NotNull(serializersProvider, "serializersProvider");
+            Expect.NotNull(persistence, nameof(persistence));
+            Expect.NotNull(serializersProvider, nameof(serializersProvider));
+            Expect.NotNull(telemetry, nameof(telemetry));
 
             Persistence = persistence;
             this.serializersProvider = serializersProvider;
-            this.metrics = metrics;
-            this.loggerFactory = loggerFactory;
+            this.telemetry = telemetry;
         }
 
         private readonly IProvideSerializers serializersProvider;
-        private readonly IMetrics metrics;
-        private readonly ILoggerFactory loggerFactory;
+        private readonly ITelemetry telemetry;
         private bool isDisposed;
 
         public IPersistence Persistence { get; }
@@ -34,8 +31,7 @@
 
         public IEventStoreSession OpenSession(bool suppressAmbientTransaction = false)
         {
-            var logger = loggerFactory != null ? loggerFactory.CreateLogger<EventStoreSession>() : VoidLogger.Current;
-            return new EventStoreSession(Persistence, serializersProvider, logger, metrics, suppressAmbientTransaction)
+            return new EventStoreSession(Persistence, serializersProvider, telemetry, suppressAmbientTransaction)
             {
                 WarnOnStreamLength = WarnOnStreamLength,
                 ErrorOnStreamLength = ErrorOnStreamLength,

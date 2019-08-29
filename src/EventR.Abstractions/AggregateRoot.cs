@@ -1,5 +1,6 @@
 ﻿namespace EventR.Abstractions
 {
+    using EventR.Abstractions.Exceptions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -63,7 +64,7 @@
         /// <summary>
         /// Collection of events that have yet not been persisted.
         /// </summary>
-        internal IEnumerable<object> UncommitedEvents => uncommitedEvents.AsEnumerable();
+        internal object[] UncommitedEvents => uncommitedEvents.ToArray();
 
         internal void MarkAsCommited()
         {

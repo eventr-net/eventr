@@ -1,4 +1,4 @@
-namespace EventR.Spec
+﻿namespace EventR.Spec
 {
     using System;
     using System.Collections.Generic;

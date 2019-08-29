@@ -1,26 +1,22 @@
 ﻿namespace EventR
 {
     using EventR.Abstractions;
+    using EventR.Abstractions.Telemetry;
     using EventR.Binary;
     using System;
     using System.Linq;
     using System.Reflection;
-    using App.Metrics;
-    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Fluent API configuration related to core features.
     /// </summary>
-    public class Builder
+    public sealed class Builder : BuilderBase
     {
-        protected Builder(ConfigurationContext context)
+        public Builder()
+            : base(new ConfigurationContext())
         {
-            Context = context;
+            Context.BuildMethod = BuildImpl;
         }
-
-        public static Builder SetUp => new Builder(new ConfigurationContext());
-
-        public ConfigurationContext Context { get; }
 
         public Builder AssembliesToScan(params Assembly[] assemblies)
         {
@@ -50,6 +46,7 @@
         public Builder InMemory()
         {
             Context.PersistenceFactory = () => new InMemory.InMemoryPersistence();
+            Context.TelemetryFactory = () => new InMemory.InMemoryTelemetry();
             return this;
         }
 
@@ -66,29 +63,13 @@
             return this;
         }
 
-        public Builder Metrics(IMetrics metrics)
+        public Builder Telemetry(Func<ITelemetry> telemetryFactory)
         {
-            return Metrics(() => metrics);
-        }
-
-        public Builder Metrics(Func<IMetrics> metricsFactory)
-        {
-            Context.MetricsFactory = metricsFactory;
+            Context.TelemetryFactory = telemetryFactory;
             return this;
         }
 
-        public Builder Logging(ILoggerFactory loggerFactory)
-        {
-            return Logging(() => loggerFactory);
-        }
-
-        public Builder Logging(Func<ILoggerFactory> loggerFactory)
-        {
-            Context.LoggerFactory = loggerFactory;
-            return this;
-        }
-
-        public void Build(out IEventStore eventStore, out IAggregateRootServices aggregateRootOpts)
+        private (IEventStore, IAggregateRootServices) BuildImpl()
         {
             var eventTypes = Util.FindEventTypes(Context.EventPredicate, Context.AssembliesToScanForEvents);
             IEventFactory eventFactory = new EventFactory(eventTypes);
@@ -98,27 +79,16 @@
             var serializers = Context.SerializerFactories.Select(fn => fn(eventFactory)).ToArray();
             IProvideSerializers serializerProvider = new Serializers(serializers, Context.DefaultSerializerId);
 
-            IMetrics metrics = Context.MetricsFactory != null ? Context.MetricsFactory() : null;
+            ITelemetry telemetry = Context.TelemetryFactory != null ? Context.TelemetryFactory() : new VoidTelemetry();
 
-            ILoggerFactory loggers = Context.LoggerFactory != null ? Context.LoggerFactory() : null;
-
-            eventStore = new EventStore(peristence, serializerProvider, metrics, loggers)
+            var eventStore = new EventStore(peristence, serializerProvider, telemetry)
             {
                 WarnOnStreamLength = Context.WarnOnStreamLength,
                 ErrorOnStreamLength = Context.ErrorOnStreamLength,
             };
-            aggregateRootOpts = new AggregateRootServices(eventFactory, new EventHandlerRegistry(), Context.ErrorOnStreamLength);
-        }
+            var aggregateRootOpts = new AggregateRootServices(eventFactory, new EventHandlerRegistry(), Context.ErrorOnStreamLength);
 
-        public IEventStore Build()
-        {
-            IEventStore store;
-            IAggregateRootServices options;
-            Build(out store, out options);
-
-            AggregateRootServices.InitCurrent(options);
-
-            return store;
+            return (eventStore, aggregateRootOpts);
         }
     }
 }

@@ -32,7 +32,8 @@
 
         public static IEnumerable<object[]> ValidCommits()
         {
-            return CreateValidCommits(3).Select(x => new[] { x });
+            var result = CreateValidCommits(3);
+            return ZipWithIndex(result);
         }
 
         public static IEnumerable<object[]> InvalidCommits()
@@ -51,8 +52,7 @@
             result[10].SerializerId = "4848 884";
             result[11].Payload = null;
             result[12].Payload = Array.Empty<byte>();
-
-            return result.Select(x => new[] { x });
+            return ZipWithIndex(result);
         }
 
         public static async Task<string> PrepareCommits(IPersistence persistence, int n)
@@ -107,6 +107,14 @@
             }
 
             return new Tuple<bool, string>(true, string.Empty);
+        }
+
+        private static IEnumerable<object[]> ZipWithIndex<T>(T[] source)
+        {
+            for (var i = 0; i < source.Length; i++)
+            {
+                yield return new object[] { source[i], i };
+            }
         }
 
         public static readonly byte[] TestPayload1 = Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consectetur adipiscing " +

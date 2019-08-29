@@ -1,4 +1,4 @@
-﻿namespace EventR
+﻿namespace EventR.Abstractions
 {
     using System.Runtime.InteropServices;
 

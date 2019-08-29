@@ -1,6 +1,7 @@
-namespace EventR.Spec.Domain
+﻿namespace EventR.Spec.Domain
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using EventR.Abstractions;
     using EventR.Spec.Domain.Events;
@@ -61,7 +62,7 @@ namespace EventR.Spec.Domain
 
         public void TerminateAccount(TerminateReason reason)
         {
-            Apply<ITerminateCustomerAccount>(e =>
+            Apply<TerminateCustomerAccount>(e =>
             {
                 e.Reason = reason;
             });
@@ -95,10 +96,17 @@ namespace EventR.Spec.Domain
                     Tax = x.Quantity * 0.9m,
                 }).ToList();
             order.Lines = lines;
-            Data.Orders.Add(order);
+            if (Data.Orders == null)
+            {
+                Data.Orders = new List<Order> { order };
+            }
+            else
+            {
+                Data.Orders.Add(order);
+            }
         }
 
-        private void Handle(ITerminateCustomerAccount e)
+        private void Handle(TerminateCustomerAccount e)
         {
             Data.IsTerminated = true;
             Data.TerminateReason = e.Reason;

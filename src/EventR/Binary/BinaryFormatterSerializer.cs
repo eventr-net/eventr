@@ -20,7 +20,7 @@
             };
         }
 
-        public void Serialize(Commit commit, IEnumerable<object> events)
+        public void Serialize(Commit commit, object[] events)
         {
             Expect.NotNull(commit, "commit");
             Expect.NotNull(events, "events");

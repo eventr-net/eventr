@@ -1,7 +1,6 @@
-namespace EventR.Tests
+﻿namespace EventR.Tests
 {
     public class BuilderTests
     {
-        
     }
 }

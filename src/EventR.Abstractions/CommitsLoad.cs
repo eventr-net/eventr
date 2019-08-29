@@ -1,7 +1,6 @@
 ﻿namespace EventR.Abstractions
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
 
     public sealed class CommitsLoad
     {

@@ -1,19 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <ItemGroup>
-    <ProjectReference Include="..\EventR.Abstractions\EventR.Abstractions.csproj"/>
+    <ProjectReference Include="..\EventR.Abstractions\EventR.Abstractions.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="xunit" Version="2.3.1"/>
-    <PackageReference Include="CompareNETObjects" Version="4.52.0"/>
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0"/>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.0" PrivateAssets="all"/>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006" PrivateAssets="all"/>
+    <PackageReference Include="xunit" Version="$(XunitVersion)" />
+    <PackageReference Include="CompareNETObjects" Version="$(CompareNETObjectsVersion)" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
   </ItemGroup>
+
   <PropertyGroup>
-    <Description>
-      EventR is an event-sourcing presistence library available as netstandard2.
-      This packages contains sets of tests that implementations of either serialization or persistence must pass.
-    </Description>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+
+  <!-- ../Directory.Build.props is merged automatically with this file -->
+
 </Project>

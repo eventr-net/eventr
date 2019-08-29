@@ -1,6 +1,6 @@
 ﻿namespace EventR.Abstractions
 {
-    using System.Diagnostics.CodeAnalysis;
+    using EventR.Abstractions.Exceptions;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -85,6 +85,11 @@
             {
                 throw new InvalidPersistenceDataException(
                     $"Payload is too large ({Payload.Length} bytes; limit is {MaxPayloadSize}) in commit {StreamId}/{Version}");
+            }
+
+            if (Id == TimeGuid.Empty)
+            {
+                throw new InvalidPersistenceDataException($"Id must not be empty TimeGuid in commit {StreamId}/{Version}");
             }
         }
 

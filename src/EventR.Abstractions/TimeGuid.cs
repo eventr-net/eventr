@@ -14,6 +14,8 @@
 
         private readonly Guid value;
 
+        public static readonly TimeGuid Empty = (TimeGuid)Guid.Empty;
+
         private TimeGuid(Guid value)
         {
             this.value = value;

@@ -1,4 +1,4 @@
-namespace EventR.Spec.Serialization
+﻿namespace EventR.Spec.Serialization
 {
     using System;
     using System.Linq;
@@ -111,7 +111,7 @@ namespace EventR.Spec.Serialization
         {
             var sut = Fixture.Serializer;
             var commit = new Commit();
-            var expected = Fixture.EventsFromDomain().First();
+            var expected = Fixture.EventsFromDomain.First();
 
             sut.Serialize(commit, new[] { expected });
             var events = sut.Deserialize(commit);
@@ -126,7 +126,7 @@ namespace EventR.Spec.Serialization
         {
             var sut = Fixture.Serializer;
             var commit = new Commit();
-            var events = Fixture.EventsFromDomain();
+            var events = Fixture.EventsFromDomain;
 
             sut.Serialize(commit, events);
             var eventsDeserialized = sut.Deserialize(commit);

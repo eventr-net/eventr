@@ -1,6 +1,7 @@
 ﻿namespace EventR
 {
     using EventR.Abstractions;
+    using EventR.Abstractions.Exceptions;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;

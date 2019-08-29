@@ -4,6 +4,7 @@
     using System.Runtime.Serialization;
 
     [DataContract]
+    [Serializable]
     public class TestSubCase
     {
         [DataMember]

@@ -1,16 +1,21 @@
 ﻿namespace EventR.Tests
 {
     using EventR.Abstractions;
+    using EventR.Spec.Domain;
+    using Moq;
     using System;
     using Xunit;
 
     public class AggregateRootTests
     {
         [Fact]
-        public void Test1()
+        public void CtorThrowsOnInvalidArg()
         {
-            var a = new object() as IEventStore;
-            Assert.True(1 == 1);
+            var rootServices = new Mock<IAggregateRootServices>().Object;
+
+            Assert.Throws<ArgumentNullException>(() => new CustomerAggregate(null, rootServices));
+            Assert.ThrowsAny<ArgumentException>(() => new CustomerAggregate(string.Empty, rootServices));
+            Assert.Throws<ArgumentNullException>(() => new CustomerAggregate(Guid.NewGuid().ToString(), null));
         }
     }
 }

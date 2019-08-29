@@ -1,11 +1,9 @@
-﻿namespace EventR
+﻿namespace EventR.Abstractions
 {
-    using EventR.Abstractions;
+    using EventR.Abstractions.Telemetry;
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using App.Metrics;
-    using Microsoft.Extensions.Logging;
 
     public sealed class ConfigurationContext
     {
@@ -27,9 +25,9 @@
 
         private Func<Type, bool> eventPredicate;
 
-        private Func<IMetrics> metricsFactory;
+        private Func<ITelemetry> telemetryFactory;
 
-        private Func<ILoggerFactory> loggerFactory;
+        private Func<(IEventStore, IAggregateRootServices)> buildMethod;
 
         public ICollection<Assembly> AssembliesToScanForEvents { get; }
 
@@ -82,25 +80,25 @@
             }
         }
 
-        public Func<IMetrics> MetricsFactory
+        public Func<ITelemetry> TelemetryFactory
         {
-            get => metricsFactory;
+            get => telemetryFactory;
             set
             {
                 Expect.NotNull(value, nameof(value));
-                Expect.IsNotSet(metricsFactory, nameof(MetricsFactory));
-                metricsFactory = value;
+                Expect.IsNotSet(telemetryFactory, nameof(telemetryFactory));
+                telemetryFactory = value;
             }
         }
 
-        public Func<ILoggerFactory> LoggerFactory
+        public Func<(IEventStore, IAggregateRootServices)> BuildMethod
         {
-            get => loggerFactory;
+            get => buildMethod;
             set
             {
                 Expect.NotNull(value, nameof(value));
-                Expect.IsNotSet(loggerFactory, nameof(LoggerFactory));
-                loggerFactory = value;
+                Expect.IsNotSet(buildMethod, nameof(buildMethod));
+                buildMethod = value;
             }
         }
 

@@ -1,11 +1,10 @@
-﻿namespace EventR
+﻿namespace EventR.Abstractions
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using EventR.Abstractions;
 
     public static class Util
     {

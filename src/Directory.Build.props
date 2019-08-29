@@ -1,26 +1,25 @@
 <Project>
-  <PropertyGroup>
-    <SemVer Condition="'$(SemVer)' == ''">0.1.0-alpha</SemVer>
-    <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
-    <GitCommit Condition="'$(GitCommit)' == ''">unknown</GitCommit>
-    <GitBranch Condition="'$(GitBranch)' == ''">unknown</GitBranch>
-  </PropertyGroup>
+
+  <Import Project="..\shared.props" />
+  <Import Project="..\dependencies.props" />
 
   <PropertyGroup>
-    <PackageVersion>$(SemVer)</PackageVersion>
+    <PackageVersion>$(Version)</PackageVersion>
     <IsPackable>true</IsPackable>
     <PackageProjectUrl>https://eventr-net.github.io</PackageProjectUrl>
     <RepositoryUrl>https://github.com/eventr-net/eventr</RepositoryUrl>
-    <PackageIconUrl>https://eventr-net.github.io/icon_64x64.png</PackageIconUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/eventr-net/eventr/master/LICENSE</PackageLicenseUrl>
-    <PackageTags>event-sourcing; database</PackageTags>
+    <PackageIconUrl>https://eventr-net.github.io/images/logo_64x64.png</PackageIconUrl>
+    <PackageTags>event-sourcing; database; persistence</PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright (c) 2018 Jan Dvorak</Copyright>
+    <Copyright>Copyright (c) 2019 Jan Dvorak</Copyright>
     <Authors>Jan Dvorak</Authors>
+    <CodeAnalysisRuleSet Condition="'$(CodeAnalysis)'!='False'">..\..\eventr.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors Condition="'$(WarningsAsErrors)'=='True'">true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>..\default.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-  </PropertyGroup>
+  <ItemGroup Condition="'$(CodeAnalysis)'!='False'">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(FxCopAnalyzersVersion)" PrivateAssets="all"/>
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopAnalyzersVersion)" PrivateAssets="all"/>
+  </ItemGroup>
+
 </Project>

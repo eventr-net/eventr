@@ -1,10 +1,11 @@
-namespace EventR.Spec.Domain
+﻿namespace EventR.Spec.Domain
 {
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
 
     [DataContract]
+    [Serializable]
     public sealed class Customer
     {
         [DataMember(Order = 1, IsRequired = true)]

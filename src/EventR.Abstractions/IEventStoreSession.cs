@@ -11,8 +11,9 @@
         /// <typeparam name="T">root aggregate type</typeparam>
         /// <typeparam name="TDataSnaphot">root aggregate data snapshot</typeparam>
         /// <param name="aggregate">root aggregate entity</param>
+        /// <param name="correlationId">telemetry identifier</param>
         /// <returns>If operation has suceeded <c>true</c>; otherwise <c>false</c>.</returns>
-        Task<bool> Hydrate<T, TDataSnaphot>(T aggregate)
+        Task<bool> HydrateAsync<T, TDataSnaphot>(T aggregate, string correlationId = null)
             where T : AggregateRoot<TDataSnaphot>
             where TDataSnaphot : class, new();
 
@@ -22,7 +23,8 @@
         /// <typeparam name="T">root aggregate type</typeparam>
         /// <typeparam name="TDataSnaphot">root aggregate data snapshot</typeparam>
         /// <param name="aggregate">root aggregate entity</param>
-        Task<EventsLoad> LoadEvents<T, TDataSnaphot>(T aggregate)
+        /// <param name="correlationId">telemetry identifier</param>
+        Task<EventsLoad> LoadEventsAsync<T, TDataSnaphot>(T aggregate, string correlationId = null)
             where T : AggregateRoot<TDataSnaphot>
             where TDataSnaphot : class, new();
 
@@ -32,8 +34,9 @@
         /// <typeparam name="T">root aggregate type</typeparam>
         /// <typeparam name="TDataSnaphot">root aggregate data snapshot</typeparam>
         /// <param name="aggregate">root aggregate entity</param>
+        /// <param name="correlationId">telemetry identifier</param>
         /// <returns>If operation has suceeded <c>true</c>; otherwise <c>false</c>.</returns>
-        Task<bool> SaveUncommitedEvents<T, TDataSnaphot>(T aggregate)
+        Task<bool> SaveUncommitedEventsAsync<T, TDataSnaphot>(T aggregate, string correlationId = null)
             where T : AggregateRoot<TDataSnaphot>
             where TDataSnaphot : class, new();
 
@@ -43,8 +46,9 @@
         /// <typeparam name="T">root aggregate type</typeparam>
         /// <typeparam name="TDataSnaphot">root aggregate data snapshot</typeparam>
         /// <param name="aggregate">root aggregate entity</param>
+        /// <param name="correlationId">telemetry identifier</param>
         /// <returns>If operation has suceeded <c>true</c>; otherwise <c>false</c>.</returns>
-        Task<bool> DeleteStream<T, TDataSnaphot>(T aggregate)
+        Task<bool> DeleteStreamAsync<T, TDataSnaphot>(T aggregate, string correlationId = null)
             where T : AggregateRoot<TDataSnaphot>
             where TDataSnaphot : class, new();
 
@@ -52,7 +56,8 @@
         /// Delete whole event stream.
         /// </summary>
         /// <param name="streamId">root aggregate entity</param>
+        /// <param name="correlationId">telemetry identifier</param>
         /// <returns>If operation has suceeded <c>true</c>; otherwise <c>false</c>.</returns>
-        Task<bool> DeleteStream(string streamId);
+        Task<bool> DeleteStreamAsync(string streamId, string correlationId = null);
     }
 }

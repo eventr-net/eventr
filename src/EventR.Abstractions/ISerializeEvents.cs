@@ -11,7 +11,7 @@
         /// Serializes events into <see cref="Commit.Payload"/>;
         /// also sets <see cref="Commit.ItemsCount"/> and <see cref="Commit.SerializerId"/>.
         /// </summary>
-        void Serialize(Commit commit, IEnumerable<object> events);
+        void Serialize(Commit commit, object[] events);
 
         /// <summary>
         /// Deserializes <see cref="Commit.Payload"/> into array of events.

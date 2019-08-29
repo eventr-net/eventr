@@ -1,11 +1,12 @@
-namespace EventR.Spec.Persistence
+﻿namespace EventR.Spec.Persistence
 {
     using EventR.Abstractions;
+    using EventR.Abstractions.Exceptions;
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
+    using Util = EventR.Spec.Util;
 
     public abstract class PersistenceSpec<T> : IClassFixture<T>
         where T : class, IPersistenceSpecFixture, new()
@@ -26,7 +27,7 @@ namespace EventR.Spec.Persistence
             var c2 = commits[1];
             var sut = Fixture.Persistence;
 
-            using (var tx = Util.CreateTransactionScope())
+            using (var tx = Spec.Util.CreateTransactionScope())
             using (var sess = sut.OpenSession())
             {
                 var ok = await sess.Save(c1).ConfigureAwait(false);
@@ -49,7 +50,7 @@ namespace EventR.Spec.Persistence
             var c1 = Data.CreateValidCommits(1).First();
             var sut = Fixture.Persistence;
 
-            using (var tx = Util.CreateTransactionScope())
+            using (var tx = Spec.Util.CreateTransactionScope())
             using (var sess = sut.OpenSession())
             {
                 var ok = await sess.Save(c1).ConfigureAwait(false);
@@ -122,24 +123,24 @@ namespace EventR.Spec.Persistence
 
         [Theory]
         [MemberData(nameof(Data.ValidCommits), MemberType = typeof(Data))]
-        public async Task ValidCommitsShouldBeSaved(Commit validCommit)
+        public async Task ValidCommitsShouldBeSaved(Commit validCommit, int testIndex)
         {
             var sut = Fixture.Persistence;
             using (var sess = sut.OpenSession())
             {
                 var ok = await sess.Save(validCommit).ConfigureAwait(false);
-                Assert.True(ok);
+                Assert.True(ok, $"Test index: {testIndex} has failed.");
             }
         }
 
         [Theory]
         [MemberData(nameof(Data.InvalidCommits), MemberType = typeof(Data))]
-        public async Task InvalidCommitsShouldBeRejected(Commit invalidCommit)
+        public async Task InvalidCommitsShouldBeRejected(Commit invalidCommit, int testIndex)
         {
             var sut = Fixture.Persistence;
             using (var sess = sut.OpenSession())
             {
-                await AssertException.Is<InvalidPersistenceDataException>(() => sess.Save(invalidCommit));
+                await AssertException.Is<InvalidPersistenceDataException>(() => sess.Save(invalidCommit), testIndex: testIndex);
             }
         }
 

@@ -1,4 +1,4 @@
-namespace EventR.Spec
+﻿namespace EventR.Spec
 {
     using System;
     using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace EventR.Spec
         {
             using (var sess = Fixture.Store.OpenSession())
             {
-                await AssertException.Is<ArgumentNullException>(() => sess.LoadEvents<CustomerAggregate, Customer>(null));
+                await AssertException.Is<ArgumentNullException>(() => sess.LoadEventsAsync<CustomerAggregate, Customer>(null));
             }
         }
 
@@ -36,7 +36,7 @@ namespace EventR.Spec
         {
             using (var sess = Fixture.Store.OpenSession())
             {
-                await AssertException.Is<ArgumentNullException>(() => sess.Hydrate<CustomerAggregate, Customer>(null));
+                await AssertException.Is<ArgumentNullException>(() => sess.HydrateAsync<CustomerAggregate, Customer>(null));
             }
         }
 
@@ -45,7 +45,7 @@ namespace EventR.Spec
         {
             using (var sess = Fixture.Store.OpenSession())
             {
-                await AssertException.Is<ArgumentNullException>(() => sess.SaveUncommitedEvents<CustomerAggregate, Customer>(null));
+                await AssertException.Is<ArgumentNullException>(() => sess.SaveUncommitedEventsAsync<CustomerAggregate, Customer>(null));
             }
         }
 
@@ -55,7 +55,7 @@ namespace EventR.Spec
             var r = new CustomerAggregate(Guid.NewGuid().ToString("N"), Fixture.AggregateRootServices);
             using (var sess = Fixture.Store.OpenSession())
             {
-                var ok = await sess.SaveUncommitedEvents<CustomerAggregate, Customer>(r).ConfigureAwait(false);
+                var ok = await sess.SaveUncommitedEventsAsync<CustomerAggregate, Customer>(r).ConfigureAwait(false);
                 Assert.True(ok, CreateMessage("saving while no uncommited events exist"));
                 Assert.Equal(0, r.CurrentVersion);
             }
@@ -66,7 +66,7 @@ namespace EventR.Spec
         {
             using (var sess = Fixture.Store.OpenSession())
             {
-                await AssertException.Is<ArgumentNullException>(() => sess.DeleteStream((string)null));
+                await AssertException.Is<ArgumentNullException>(() => sess.DeleteStreamAsync((string)null));
             }
         }
 
@@ -75,7 +75,7 @@ namespace EventR.Spec
         {
             using (var sess = Fixture.Store.OpenSession())
             {
-                await AssertException.Is<ArgumentException>(() => sess.DeleteStream(string.Empty));
+                await AssertException.Is<ArgumentException>(() => sess.DeleteStreamAsync(string.Empty));
             }
         }
 
@@ -84,7 +84,7 @@ namespace EventR.Spec
         {
             using (var sess = Fixture.Store.OpenSession())
             {
-                await AssertException.Is<ArgumentNullException>(() => sess.DeleteStream<CustomerAggregate, Customer>(null));
+                await AssertException.Is<ArgumentNullException>(() => sess.DeleteStreamAsync<CustomerAggregate, Customer>(null));
             }
         }
 
@@ -95,11 +95,11 @@ namespace EventR.Spec
 
             using (var sess = Fixture.Store.OpenSession())
             {
-                var ok = await sess.SaveUncommitedEvents<CustomerAggregate, Customer>(r1).ConfigureAwait(false);
+                var ok = await sess.SaveUncommitedEventsAsync<CustomerAggregate, Customer>(r1).ConfigureAwait(false);
                 Assert.True(ok, CreateMessage("saving uncommited events"));
 
                 var r2 = new CustomerAggregate(r1.StreamId, Fixture.AggregateRootServices);
-                ok = await sess.Hydrate<CustomerAggregate, Customer>(r2).ConfigureAwait(false);
+                ok = await sess.HydrateAsync<CustomerAggregate, Customer>(r2).ConfigureAwait(false);
                 Assert.True(ok, "hydrating previously saved user");
                 var result = Comparer.Compare(r1, r2);
                 Assert.True(result.AreEqual, CreateMessage(result.DifferencesString));
@@ -114,7 +114,7 @@ namespace EventR.Spec
             using (var tx = Util.CreateTransactionScope())
             using (var sess = Fixture.Store.OpenSession())
             {
-                var savedOk = await sess.SaveUncommitedEvents<CustomerAggregate, Customer>(r1).ConfigureAwait(false);
+                var savedOk = await sess.SaveUncommitedEventsAsync<CustomerAggregate, Customer>(r1).ConfigureAwait(false);
                 Assert.True(savedOk, CreateMessage("saving uncommited events"));
 
                 tx.Complete();
@@ -132,7 +132,7 @@ namespace EventR.Spec
             using (var tx = Util.CreateTransactionScope())
             using (var sess = Fixture.Store.OpenSession())
             {
-                var ok = await sess.SaveUncommitedEvents<CustomerAggregate, Customer>(r1).ConfigureAwait(false);
+                var ok = await sess.SaveUncommitedEventsAsync<CustomerAggregate, Customer>(r1).ConfigureAwait(false);
                 Assert.True(ok, CreateMessage("saving uncommited events"));
 
                 // tx.Complete(); => should ignore the save
@@ -150,7 +150,7 @@ namespace EventR.Spec
             using (var tx = Util.CreateTransactionScope())
             using (var sess = Fixture.Store.OpenSession(suppressAmbientTransaction: true))
             {
-                var savedOk = await sess.SaveUncommitedEvents<CustomerAggregate, Customer>(r1).ConfigureAwait(false);
+                var savedOk = await sess.SaveUncommitedEventsAsync<CustomerAggregate, Customer>(r1).ConfigureAwait(false);
                 Assert.True(savedOk, CreateMessage("saving uncommited events"));
 
                 // no tx.Complete(); => should still accept, because tx is supressed,
@@ -169,7 +169,7 @@ namespace EventR.Spec
 
             using (var sess = Fixture.Store.OpenSession())
             {
-                var ok = await sess.DeleteStream(r1.StreamId).ConfigureAwait(false);
+                var ok = await sess.DeleteStreamAsync(r1.StreamId).ConfigureAwait(false);
                 Assert.True(ok, CreateMessage("deleting previously saved aggregate"));
             }
 
@@ -183,7 +183,7 @@ namespace EventR.Spec
             var nonExistentStreamId = Guid.NewGuid().ToString("N");
             using (var sess = Fixture.Store.OpenSession())
             {
-                var (r, ok) = await sess.Load(nonExistentStreamId, Fixture.AggregateRootServices).ConfigureAwait(false);
+                var (r, ok) = await sess.LoadAsync(nonExistentStreamId, Fixture.AggregateRootServices).ConfigureAwait(false);
                 Assert.Null(r);
                 Assert.False(ok);
             }
@@ -213,7 +213,7 @@ namespace EventR.Spec
                 foreach (var action in useCaseActions)
                 {
                     action(r);
-                    var ok = await sess.SaveUncommitedEvents<CustomerAggregate, Customer>(r).ConfigureAwait(false);
+                    var ok = await sess.SaveUncommitedEventsAsync<CustomerAggregate, Customer>(r).ConfigureAwait(false);
                     if (!ok)
                     {
                         throw new Exception("failed to prepare root aggregate");
@@ -229,7 +229,7 @@ namespace EventR.Spec
             var r = new CustomerAggregate(streamId, Fixture.AggregateRootServices);
             using (var sess = Fixture.Store.OpenSession(suppressAmbientTransaction: true))
             {
-                var ok = await sess.Hydrate<CustomerAggregate, Customer>(r).ConfigureAwait(false);
+                var ok = await sess.HydrateAsync<CustomerAggregate, Customer>(r).ConfigureAwait(false);
                 if (!ok)
                 {
                     return (false, "failed to load & hydrate from the store");
