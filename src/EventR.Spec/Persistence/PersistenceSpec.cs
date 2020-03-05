@@ -30,18 +30,19 @@
             using (var tx = Spec.Util.CreateTransactionScope())
             using (var sess = sut.OpenSession())
             {
-                var ok = await sess.Save(c1).ConfigureAwait(false);
+                var ok = await sess.SaveAsync(c1).ConfigureAwait(false);
                 Assert.True(ok);
 
-                ok = await sess.Save(c2).ConfigureAwait(false);
+                ok = await sess.SaveAsync(c2).ConfigureAwait(false);
                 Assert.True(ok);
 
                 tx.Complete(); // => should accept changes
             }
 
-            string error;
-            Assert.True(Fixture.HasBeenSaved(c1, out error), CreateMessage(error));
-            Assert.True(Fixture.HasBeenSaved(c2, out error), CreateMessage(error));
+            var (ok1, error1) = await Fixture.HasBeenSavedAsync(c1).ConfigureAwait(false);
+            var (ok2, error2) = await Fixture.HasBeenSavedAsync(c2).ConfigureAwait(false);
+            Assert.True(ok1, CreateMessage(error1));
+            Assert.True(ok2, CreateMessage(error2));
         }
 
         [Fact]
@@ -53,13 +54,14 @@
             using (var tx = Spec.Util.CreateTransactionScope())
             using (var sess = sut.OpenSession())
             {
-                var ok = await sess.Save(c1).ConfigureAwait(false);
+                var ok = await sess.SaveAsync(c1).ConfigureAwait(false);
                 Assert.True(ok);
 
                 // tx disposed without tx.Complete() => should drop changes
             }
 
-            Assert.False(Fixture.HasBeenSaved(c1, out string error), CreateMessage(error));
+            var (ok1, error1) = await Fixture.HasBeenSavedAsync(c1).ConfigureAwait(false);
+            Assert.False(ok1, CreateMessage(error1));
         }
 
         [Fact]
@@ -71,14 +73,15 @@
             using (var tx = Util.CreateTransactionScope())
             using (var sess = sut.OpenSession(suppressAmbientTransaction: true))
             {
-                var ok = await sess.Save(c1).ConfigureAwait(false);
+                var ok = await sess.SaveAsync(c1).ConfigureAwait(false);
                 Assert.True(ok);
 
                 // tx disposed without tx.Complete()
                 // => still should accept changes, because session is configured not to use ambient transaction
             }
 
-            Assert.True(Fixture.HasBeenSaved(c1, out string error), CreateMessage(error));
+            var (ok1, error1) = await Fixture.HasBeenSavedAsync(c1).ConfigureAwait(false);
+            Assert.True(ok1, CreateMessage(error1));
         }
 
         [Fact]
@@ -89,11 +92,12 @@
 
             using (var sess = sut.OpenSession())
             {
-                var ok = await sess.Save(c1).ConfigureAwait(false);
+                var ok = await sess.SaveAsync(c1).ConfigureAwait(false);
                 Assert.True(ok);
             }
 
-            Assert.True(Fixture.HasBeenSaved(c1, out string error), CreateMessage(error));
+            var (ok1, error1) = await Fixture.HasBeenSavedAsync(c1).ConfigureAwait(false);
+            Assert.True(ok1, CreateMessage(error1));
         }
 
         [Fact]
@@ -110,11 +114,11 @@
             using (var tx = Util.CreateTransactionScope())
             using (var sess = sut.OpenSession())
             {
-                var ok = await sess.Save(c1).ConfigureAwait(false);
+                var ok = await sess.SaveAsync(c1).ConfigureAwait(false);
                 Assert.True(ok);
 
                 await AssertException.Is<VersionConflictException>(
-                    () => sess.Save(c2),
+                    () => sess.SaveAsync(c2),
                     ex => !string.IsNullOrEmpty(ex.StreamId) && ex.Version > 0);
 
                 tx.Complete();
@@ -128,7 +132,7 @@
             var sut = Fixture.Persistence;
             using (var sess = sut.OpenSession())
             {
-                var ok = await sess.Save(validCommit).ConfigureAwait(false);
+                var ok = await sess.SaveAsync(validCommit).ConfigureAwait(false);
                 Assert.True(ok, $"Test index: {testIndex} has failed.");
             }
         }
@@ -140,7 +144,7 @@
             var sut = Fixture.Persistence;
             using (var sess = sut.OpenSession())
             {
-                await AssertException.Is<InvalidPersistenceDataException>(() => sess.Save(invalidCommit), testIndex: testIndex);
+                await AssertException.Is<InvalidPersistenceDataException>(() => sess.SaveAsync(invalidCommit), testIndex: testIndex);
             }
         }
 
@@ -150,7 +154,7 @@
             var sut = Fixture.Persistence;
             using (var sess = sut.OpenSession())
             {
-                await AssertException.Is<ArgumentNullException>(() => sess.Save(null));
+                await AssertException.Is<ArgumentNullException>(() => sess.SaveAsync(null));
             }
         }
 
@@ -160,8 +164,8 @@
             var sut = Fixture.Persistence;
             using (var sess = sut.OpenSession())
             {
-                await AssertException.Is<ArgumentNullException>(() => sess.LoadCommits(null));
-                await AssertException.Is<ArgumentException>(() => sess.LoadCommits(string.Empty));
+                await AssertException.Is<ArgumentNullException>(() => sess.LoadCommitsAsync(null));
+                await AssertException.Is<ArgumentException>(() => sess.LoadCommitsAsync(string.Empty));
             }
         }
 
@@ -173,20 +177,21 @@
 
             using (var sess = sut.OpenSession())
             {
-                var ok = await sess.Save(c1).ConfigureAwait(false);
+                var ok = await sess.SaveAsync(c1).ConfigureAwait(false);
                 Assert.True(ok);
             }
 
-            string error;
-            Assert.True(Fixture.HasBeenSaved(c1, out error), CreateMessage(error));
+            var (ok1, error1) = await Fixture.HasBeenSavedAsync(c1).ConfigureAwait(false);
+            Assert.True(ok1, CreateMessage(error1));
 
             using (var sess = sut.OpenSession())
             {
-                var ok = await sess.Delete(c1.StreamId).ConfigureAwait(false);
+                var ok = await sess.DeleteAsync(c1.StreamId).ConfigureAwait(false);
                 Assert.True(ok);
             }
 
-            Assert.False(Fixture.HasBeenSaved(c1, out error), CreateMessage("deleted stream should not be available"));
+            var (ok2, _) = await Fixture.HasBeenSavedAsync(c1).ConfigureAwait(false);
+            Assert.False(ok2, CreateMessage("deleted stream should not be available"));
         }
 
         protected virtual string CreateMessage(string originalMessage, params object[] args)

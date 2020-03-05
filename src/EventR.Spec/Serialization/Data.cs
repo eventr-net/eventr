@@ -105,199 +105,265 @@
     [Serializable]
     public class ByteCase : SerializationCase<byte>
     {
+        private ByteCase()
+            : base(0)
+        { }
+
         public ByteCase(byte value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class NullableByteCase : SerializationCase<byte?>
     {
+        private NullableByteCase()
+            : base(null)
+        { }
+
         public NullableByteCase(byte? value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class IntCase : SerializationCase<int>
     {
+        private IntCase()
+            : base(0)
+        { }
+
         public IntCase(int value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class NullableIntCase : SerializationCase<int?>
     {
+        private NullableIntCase()
+            : base(null)
+        { }
+
         public NullableIntCase(int? value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class LongCase : SerializationCase<long>
     {
+        private LongCase()
+            : base(0L)
+        { }
+
         public LongCase(long value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class NullableLongCase : SerializationCase<long?>
     {
+        private NullableLongCase()
+            : base(null)
+        { }
+
         public NullableLongCase(long? value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class DoubleCase : SerializationCase<double>
     {
+        private DoubleCase()
+            : base(0d)
+        { }
+
         public DoubleCase(double value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class NullableDoubleCase : SerializationCase<double?>
     {
+        private NullableDoubleCase()
+            : base(null)
+        { }
+
         public NullableDoubleCase(double? value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class DecimalCase : SerializationCase<decimal>
     {
+        private DecimalCase()
+            : base(0m)
+        { }
+
         public DecimalCase(decimal value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class NullableDecimalCase : SerializationCase<decimal?>
     {
+        private NullableDecimalCase()
+            : base(null)
+        { }
+
         public NullableDecimalCase(decimal? value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class BoolCase : SerializationCase<bool>
     {
+        private BoolCase()
+            : base(false)
+        { }
+
         public BoolCase(bool value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class NullableBoolCase : SerializationCase<bool?>
     {
+        private NullableBoolCase()
+            : base(null)
+        { }
+
         public NullableBoolCase(bool? value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class GuidCase : SerializationCase<Guid>
     {
+        private GuidCase()
+            : base(Guid.Empty)
+        { }
+
         public GuidCase(Guid value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class NullableGuidCase : SerializationCase<Guid?>
     {
+        private NullableGuidCase()
+            : base(null)
+        { }
+
         public NullableGuidCase(Guid? value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class TimeSpanCase : SerializationCase<TimeSpan>
     {
+        private TimeSpanCase()
+            : base(TimeSpan.Zero)
+        { }
+
         public TimeSpanCase(TimeSpan value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class NullableTimeSpanCase : SerializationCase<TimeSpan?>
     {
+        private NullableTimeSpanCase()
+            : base(null)
+        { }
+
         public NullableTimeSpanCase(TimeSpan? value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class DateTimeCase : SerializationCase<DateTime>
     {
+        private DateTimeCase()
+            : base(DateTime.MinValue)
+        { }
+
         public DateTimeCase(DateTime value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class NullableDateTimeCase : SerializationCase<DateTime?>
     {
+        private NullableDateTimeCase()
+            : base(null)
+        { }
+
         public NullableDateTimeCase(DateTime? value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class StringCase : SerializationCase<string>
     {
+        private StringCase()
+            : base(null)
+        { }
+
         public StringCase(string value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class ArrayOfStringsCase : SerializationCase<string[]>
     {
+        private ArrayOfStringsCase()
+            : base(null)
+        { }
+
         public ArrayOfStringsCase(string[] value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class ArrayOfIntsCase : SerializationCase<int[]>
     {
+        private ArrayOfIntsCase()
+            : base(null)
+        { }
+
         public ArrayOfIntsCase(int[] value)
             : base(value)
-        {
-        }
+        { }
     }
 
     [Serializable]
     public class ArrayOfBytesCase : SerializationCase<byte[]>
     {
+        private ArrayOfBytesCase()
+            : base(null)
+        { }
+
         public ArrayOfBytesCase(byte[] value)
             : base(value)
-        {
-        }
+        { }
     }
 
     #pragma warning restore

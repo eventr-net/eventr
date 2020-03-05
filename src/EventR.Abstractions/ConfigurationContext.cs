@@ -1,6 +1,5 @@
 ﻿namespace EventR.Abstractions
 {
-    using EventR.Abstractions.Telemetry;
     using System;
     using System.Collections.Generic;
     using System.Reflection;
@@ -24,8 +23,6 @@
         private Func<IPersistence> persistenceFactory;
 
         private Func<Type, bool> eventPredicate;
-
-        private Func<ITelemetry> telemetryFactory;
 
         private Func<(IEventStore, IAggregateRootServices)> buildMethod;
 
@@ -77,17 +74,6 @@
                 Expect.NotNull(value, nameof(value));
                 Expect.IsNotSet(persistenceFactory, nameof(PersistenceFactory));
                 persistenceFactory = value;
-            }
-        }
-
-        public Func<ITelemetry> TelemetryFactory
-        {
-            get => telemetryFactory;
-            set
-            {
-                Expect.NotNull(value, nameof(value));
-                Expect.IsNotSet(telemetryFactory, nameof(telemetryFactory));
-                telemetryFactory = value;
             }
         }
 

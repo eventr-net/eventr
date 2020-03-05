@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
     <PackageReference Include="xunit" Version="$(XunitVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <PackageReference Include="CompareNETObjects" Version="$(CompareNETObjectsVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" PrivateAssets="all"/>
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" PrivateAssets="all"/>
   </ItemGroup>

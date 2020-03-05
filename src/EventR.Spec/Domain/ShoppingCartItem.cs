@@ -1,22 +1,26 @@
 ﻿namespace EventR.Spec.Domain
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
 
-    [SuppressMessage(
-        "Microsoft.Performance",
-        "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes",
-        Justification = "performance (reflection) is not an issue for this type")]
+    [DataContract]
     [Serializable]
-    public struct ShoppingCartItem
+    public sealed class ShoppingCartItem
     {
+        [DataMember(Order = 1, IsRequired = true)]
+        public string Sku { get; set; }
+
+        [DataMember(Order = 2, IsRequired = true)]
+        public int Quantity { get; set; }
+
         public ShoppingCartItem(string sku, int quantity)
         {
             Sku = sku;
             Quantity = quantity;
         }
 
-        public readonly string Sku;
-        public readonly int Quantity;
+        // Most serializers have trouble when parameterless ctor is not available
+        private ShoppingCartItem()
+        { }
     }
 }

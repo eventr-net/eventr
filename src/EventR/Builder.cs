@@ -1,7 +1,6 @@
 ﻿namespace EventR
 {
     using EventR.Abstractions;
-    using EventR.Abstractions.Telemetry;
     using EventR.Binary;
     using System;
     using System.Linq;
@@ -46,7 +45,6 @@
         public Builder InMemory()
         {
             Context.PersistenceFactory = () => new InMemory.InMemoryPersistence();
-            Context.TelemetryFactory = () => new InMemory.InMemoryTelemetry();
             return this;
         }
 
@@ -63,12 +61,6 @@
             return this;
         }
 
-        public Builder Telemetry(Func<ITelemetry> telemetryFactory)
-        {
-            Context.TelemetryFactory = telemetryFactory;
-            return this;
-        }
-
         private (IEventStore, IAggregateRootServices) BuildImpl()
         {
             var eventTypes = Util.FindEventTypes(Context.EventPredicate, Context.AssembliesToScanForEvents);
@@ -79,9 +71,7 @@
             var serializers = Context.SerializerFactories.Select(fn => fn(eventFactory)).ToArray();
             IProvideSerializers serializerProvider = new Serializers(serializers, Context.DefaultSerializerId);
 
-            ITelemetry telemetry = Context.TelemetryFactory != null ? Context.TelemetryFactory() : new VoidTelemetry();
-
-            var eventStore = new EventStore(peristence, serializerProvider, telemetry)
+            var eventStore = new EventStore(peristence, serializerProvider)
             {
                 WarnOnStreamLength = Context.WarnOnStreamLength,
                 ErrorOnStreamLength = Context.ErrorOnStreamLength,

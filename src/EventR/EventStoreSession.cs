@@ -2,31 +2,27 @@
 {
     using EventR.Abstractions;
     using EventR.Abstractions.Exceptions;
-    using EventR.Abstractions.Telemetry;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
+    using static EventREventSource;
 
     public sealed class EventStoreSession : IEventStoreSession
     {
         public EventStoreSession(
             IPersistence persistence,
             IProvideSerializers serializersProvider,
-            ITelemetry telemetry,
             bool suppressAmbientTransaction = false)
         {
             this.persistence = persistence;
             this.serializersProvider = serializersProvider;
-            this.telemetry = telemetry;
             SuppressAmbientTransaction = suppressAmbientTransaction;
         }
 
         private readonly IPersistence persistence;
-
         private readonly IProvideSerializers serializersProvider;
-        private readonly ITelemetry telemetry;
         private IPersistenceSession persistenceSession;
 
         private bool isDisposed;
@@ -64,10 +60,10 @@
 
                 EnsureOpenPersistenceSession();
                 streamId = aggregate.StreamId;
-                var load = await persistenceSession.LoadCommits(streamId).ConfigureAwait(false);
+                var load = await persistenceSession.LoadCommitsAsync(streamId).ConfigureAwait(false);
 
                 EventsLoad result;
-                var hasCommits = AnalyzeCommitsLoad(load, correlationId, streamId);
+                var (hasCommits, streamByteLength) = AnalyzeCommitsLoad(load, correlationId, streamId);
                 if (hasCommits)
                 {
                     var events = CreateEvents(load.Commits, correlationId, streamId);
@@ -78,46 +74,35 @@
                     result = EventsLoad.Empty;
                 }
 
-                telemetry.TrackSuccess(Operation.LoadEvents, sw.Elapsed, correlationId, streamId);
+                Log.LoadEvents(streamId, result.Events.Length, streamByteLength, sw.ElapsedMilliseconds, correlationId);
 
                 return result;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                telemetry.TrackFailure(Operation.LoadEvents, sw.Elapsed, exception, correlationId, streamId);
-
+                Log.LoadEventsError(ex, streamId, sw.ElapsedMilliseconds, correlationId);
                 throw;
             }
         }
 
-        private bool AnalyzeCommitsLoad(CommitsLoad load, string correlationId, string streamId)
+        private (bool hasCommits, int streamByteLength) AnalyzeCommitsLoad(CommitsLoad load, string correlationId, string streamId)
         {
             if (load.IsEmpty)
             {
-                telemetry.Track(Metric.EmptyStream, 1, correlationId, streamId);
-                return false;
+                return (false, 0);
             }
 
-            var streamLength = load.Commits.Length;
-            telemetry.Track(Metric.CommitsPerLoad, streamLength, correlationId, streamId);
-
-            var streamBytesCount = load.Commits.Sum(x => x.Payload.Length);
-            telemetry.Track(Metric.BytesPerLoad, streamBytesCount, correlationId, streamId);
-
-            if (ErrorOnStreamLength > 0 && streamLength >= ErrorOnStreamLength)
+            var streamByteLength = load.Commits.Sum(x => x.Payload.Length);
+            if (ErrorOnStreamLength > 0 && streamByteLength >= ErrorOnStreamLength)
             {
-                var message = $"event stream '{streamId}' is too long ({streamLength} commits >= {ErrorOnStreamLength} limit)";
-                telemetry.Log(LogSeverity.Error, message, correlationId, streamId);
-                telemetry.Track(Metric.StreamTooLong, 1, correlationId, streamId);
+                Log.EventStreamTooLongError(streamId, streamByteLength, ErrorOnStreamLength, correlationId);
             }
-            else if (WarnOnStreamLength > 0 && streamLength >= WarnOnStreamLength)
+            else if (WarnOnStreamLength > 0 && streamByteLength >= WarnOnStreamLength)
             {
-                var message = $"event stream '{streamId}' is too long ({streamLength} commits >= {ErrorOnStreamLength} limit)";
-                telemetry.Log(LogSeverity.Warning, message, correlationId, streamId);
-                telemetry.Track(Metric.StreamTooLong, 1, correlationId, streamId);
+                Log.EventStreamTooLongWarn(streamId, streamByteLength, WarnOnStreamLength, correlationId);
             }
 
-            return true;
+            return (true, streamByteLength);
         }
 
         public async Task<bool> SaveUncommitedEventsAsync<T, TDataSnaphot>(T aggregate, string correlationId = null)
@@ -140,25 +125,24 @@
                 var commit = CreateCommit(aggregate.UncommitedEvents, aggregate.CurrentVersion, correlationId, streamId);
 
                 EnsureOpenPersistenceSession();
-                var isSaved = await persistenceSession.Save(commit).ConfigureAwait(false);
+                var isSaved = await persistenceSession.SaveAsync(commit).ConfigureAwait(false);
                 if (isSaved)
                 {
                     aggregate.MarkAsCommited();
                 }
 
-                telemetry.TrackSuccess(Operation.SaveUncommitedEvents, sw.Elapsed, correlationId, streamId);
+                Log.SaveUncommitedEvents(streamId, sw.ElapsedMilliseconds, correlationId);
 
                 return isSaved;
             }
-            catch (Exception exception)
+            catch (VersionConflictException vex)
             {
-                if (exception is VersionConflictException)
-                {
-                    telemetry.Track(Metric.VersionConflict, 1, correlationId, streamId);
-                }
-
-                telemetry.TrackFailure(Operation.SaveUncommitedEvents, sw.Elapsed, exception, correlationId, streamId);
-
+                Log.VersionConflict(streamId, vex.Version, correlationId);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.SaveUncommitedEventsError(ex, streamId, sw.ElapsedMilliseconds, correlationId);
                 throw;
             }
         }
@@ -176,20 +160,19 @@
 
                 EnsureOpenPersistenceSession();
                 streamId = aggregate.StreamId;
-                var isDeleted = await persistenceSession.Delete(streamId).ConfigureAwait(false);
+                var isDeleted = await persistenceSession.DeleteAsync(streamId).ConfigureAwait(false);
                 if (isDeleted)
                 {
                     aggregate.MarkAsDeleted();
                 }
 
-                telemetry.TrackSuccess(Operation.DeleteStream, sw.Elapsed, correlationId, streamId);
+                Log.DeleteStream(streamId, sw.ElapsedMilliseconds, correlationId);
 
                 return isDeleted;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                telemetry.TrackFailure(Operation.DeleteStream, sw.Elapsed, exception, correlationId, streamId);
-
+                Log.DeleteStreamError(ex, streamId, sw.ElapsedMilliseconds, correlationId);
                 throw;
             }
         }
@@ -203,15 +186,15 @@
                 Expect.NotEmpty(streamId, nameof(streamId));
 
                 EnsureOpenPersistenceSession();
-                var isDeleted = await persistenceSession.Delete(streamId).ConfigureAwait(false);
+                var isDeleted = await persistenceSession.DeleteAsync(streamId).ConfigureAwait(false);
 
-                telemetry.TrackSuccess(Operation.DeleteStream, sw.Elapsed, correlationId, streamId);
+                Log.DeleteStream(streamId, sw.ElapsedMilliseconds, correlationId);
 
                 return isDeleted;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                telemetry.TrackFailure(Operation.DeleteStream, sw.Elapsed, exception, correlationId, streamId);
+                Log.DeleteStreamError(ex, streamId, sw.ElapsedMilliseconds, correlationId);
                 throw;
             }
         }
@@ -252,7 +235,7 @@
             };
             serializersProvider.DefaultSerializer.Serialize(commit, uncommitedEvents);
 
-            telemetry.Track(Metric.SerializeTime, sw.ElapsedMilliseconds, correlationId, streamId);
+            Log.SerializeCommit(streamId, uncommitedEvents.Length, sw.ElapsedMilliseconds, correlationId);
 
             return commit;
         }
@@ -268,7 +251,7 @@
                 all.AddRange(events);
             }
 
-            telemetry.Track(Metric.DeserializeTime, sw.ElapsedMilliseconds, correlationId, streamId);
+            Log.DeserializeCommits(streamId, all.Count, sw.ElapsedMilliseconds, correlationId);
 
             return all.ToArray();
         }

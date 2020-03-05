@@ -1,26 +1,19 @@
 ﻿namespace EventR
 {
     using EventR.Abstractions;
-    using EventR.Abstractions.Telemetry;
 
     public sealed class EventStore : IEventStore
     {
-        public EventStore(
-            IPersistence persistence,
-            IProvideSerializers serializersProvider,
-            ITelemetry telemetry)
+        public EventStore(IPersistence persistence, IProvideSerializers serializersProvider)
         {
             Expect.NotNull(persistence, nameof(persistence));
             Expect.NotNull(serializersProvider, nameof(serializersProvider));
-            Expect.NotNull(telemetry, nameof(telemetry));
 
             Persistence = persistence;
             this.serializersProvider = serializersProvider;
-            this.telemetry = telemetry;
         }
 
         private readonly IProvideSerializers serializersProvider;
-        private readonly ITelemetry telemetry;
         private bool isDisposed;
 
         public IPersistence Persistence { get; }
@@ -31,7 +24,7 @@
 
         public IEventStoreSession OpenSession(bool suppressAmbientTransaction = false)
         {
-            return new EventStoreSession(Persistence, serializersProvider, telemetry, suppressAmbientTransaction)
+            return new EventStoreSession(Persistence, serializersProvider, suppressAmbientTransaction)
             {
                 WarnOnStreamLength = WarnOnStreamLength,
                 ErrorOnStreamLength = ErrorOnStreamLength,

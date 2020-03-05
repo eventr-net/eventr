@@ -24,7 +24,7 @@
             SuppressAmbientTransaction = supressAmbientTransaction;
         }
 
-        public Task<CommitsLoad> LoadCommits(string streamId)
+        public Task<CommitsLoad> LoadCommitsAsync(string streamId)
         {
             Expect.NotEmpty(streamId, "streamId");
 
@@ -40,7 +40,7 @@
             return Task.FromResult(result);
         }
 
-        public Task<bool> Save(Commit commit)
+        public Task<bool> SaveAsync(Commit commit)
         {
             Expect.NotNull(commit, "commit");
             commit.ThrowIfContainsInvalidData();
@@ -78,7 +78,7 @@
             }
         }
 
-        public Task<bool> Delete(string streamId)
+        public Task<bool> DeleteAsync(string streamId)
         {
             Expect.NotEmpty(streamId, "streamId");
 

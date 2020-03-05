@@ -1,70 +1,100 @@
-namespace EventR.Abstractions
+﻿namespace EventR.Abstractions
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Text;
 
     public sealed class PayloadLayout
     {
-        public PayloadLayout()
+        private const byte Delim = 0x10; // \n
+        private const byte Sep = 0x3A; // :
+        private const int IntSize = 4;
+        private readonly List<(int offset, int length, string typeId)> data;
+
+        public bool IsEmpty => data.Count == 0;
+
+        public PayloadLayout(int capacity = 4)
         {
-            data = new List<(string typeId, int ends)>(2);
+            data = new List<(int offset, int length, string typeId)>(capacity);
         }
 
-        public PayloadLayout(string serialized)
+        public PayloadLayout(byte[] serialized)
         {
-            data = new List<(string typeId, int ends)>(2);
+            Expect.NotEmpty(serialized, nameof(serialized));
 
-            if (string.IsNullOrEmpty(serialized))
+            data = new List<(int offset, int length, string typeId)>(4);
+            int offset;
+            int length;
+            string typeId;
+            var pos = 0;
+            var start = 0;
+            foreach (var b in serialized)
             {
-                return;
-            }
-
-            foreach (var entry in serialized.Split(new[] { Delim }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                var sepAt = entry.IndexOf(Sep);
-                if (sepAt > 0 && sepAt < entry.Length - 1) // separates two non-empty parts
+                if (b == Delim)
                 {
-                    var typeId = entry.Substring(0, sepAt);
-                    if (int.TryParse(entry.Substring(sepAt + 1), out int ends)
-                        && ends > 0)
-                    {
-                        data.Add((typeId, ends));
-                    }
+                    (offset, length, typeId) = ReadRow(serialized, start, pos);
+                    Add(offset, length, typeId);
+                    start = pos + 1;
                 }
+
+                ++pos;
             }
+
+            (offset, length, typeId) = ReadRow(serialized, start, pos);
+            Add(offset, length, typeId);
         }
 
-        private const char Delim = '|';
-        private const char Sep = ':';
-        private readonly List<(string typeId, int ends)> data;
+        private static (int offset, int length, string typeId) ReadRow(byte[] bytes, int start, int end)
+        {
+            var idx = start;
+            var offset = BitConverter.ToInt32(bytes, idx);
+            idx += IntSize + 1;
+            var length = BitConverter.ToInt32(bytes, idx);
+            idx += IntSize + 1;
+            var typeId = Encoding.ASCII.GetString(bytes, idx, end - idx);
+            return (offset, length, typeId);
+        }
 
-        public override string ToString()
+        public void Add(int offset, int length, string typeId)
+        {
+            data.Add((offset, length, typeId));
+        }
+
+        public (int offset, int length, string typeId)[] Items
+            => data.ToArray();
+
+        public byte[] ToBytes()
         {
             if (data.Count == 0)
             {
-                return string.Empty;
+                return Array.Empty<byte>();
             }
 
-            var first = true;
-            var sb = new StringBuilder();
-            foreach (var (typeId, ends) in data)
+            using (var ms = new MemoryStream(data.Count * 100))
             {
-                if (first)
+                var first = true;
+                foreach (var (offset, length, typeId) in data)
                 {
-                    first = false;
-                }
-                else
-                {
-                    sb.Append(Delim);
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        ms.WriteByte(Delim);
+                    }
+
+                    ms.Write(BitConverter.GetBytes(offset), 0, IntSize);
+                    ms.WriteByte(Sep);
+                    ms.Write(BitConverter.GetBytes(length), 0, IntSize);
+                    ms.WriteByte(Sep);
+                    var typeIdBytes = Encoding.ASCII.GetBytes(typeId);
+                    ms.Write(typeIdBytes, 0, typeIdBytes.Length);
                 }
 
-                sb.Append(typeId);
-                sb.Append(Sep);
-                sb.Append(ends);
+                return ms.ToArray();
             }
-
-            return sb.ToString();
         }
     }
 }

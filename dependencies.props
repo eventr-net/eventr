@@ -1,15 +1,15 @@
 <Project>
 
   <PropertyGroup>
-    <FxCopAnalyzersVersion>2.9.4</FxCopAnalyzersVersion>
+    <FxCopAnalyzersVersion>2.9.8</FxCopAnalyzersVersion>
     <StyleCopAnalyzersVersion>1.1.118</StyleCopAnalyzersVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TestSdkVersion>16.2.0</TestSdkVersion>
-    <MoqVersion>4.12.0</MoqVersion>
+    <TestSdkVersion>16.5.0</TestSdkVersion>
+    <MoqVersion>4.13.1</MoqVersion>
     <XunitVersion>2.4.1</XunitVersion>
-    <CompareNETObjectsVersion>4.62.0</CompareNETObjectsVersion>
+    <CompareNETObjectsVersion>4.65.0</CompareNETObjectsVersion>
     <MicrosoftExtensionsVersion>2.2.0</MicrosoftExtensionsVersion>
   </PropertyGroup>
 

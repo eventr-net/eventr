@@ -9,6 +9,8 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <LibTargetFramework>netstandard2.1</LibTargetFramework>
+    <AppTargetFramework>netcoreapp3.1</AppTargetFramework>
   </PropertyGroup>
 
 </Project>

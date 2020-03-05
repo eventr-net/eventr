@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <TargetFramework>$(LibTargetFramework)</TargetFramework>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\EventR.Abstractions\EventR.Abstractions.csproj" />
   </ItemGroup>
@@ -9,10 +14,6 @@
     <PackageReference Include="CompareNETObjects" Version="$(CompareNETObjectsVersion)" />
     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
 
   <!-- ../Directory.Build.props is merged automatically with this file -->
 

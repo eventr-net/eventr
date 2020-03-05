@@ -1,13 +1,14 @@
-namespace EventR.Spec.Persistence
+﻿namespace EventR.Spec.Persistence
 {
-    using System;
     using EventR.Abstractions;
+    using System;
+    using System.Threading.Tasks;
 
     public interface IPersistenceSpecFixture : IDisposable
     {
         IPersistence Persistence { get; }
 
-        bool HasBeenSaved(Commit expected, out string errorDetail);
+        Task<(bool ok, string errorDetail)> HasBeenSavedAsync(Commit expected);
 
         string Description { get; }
     }

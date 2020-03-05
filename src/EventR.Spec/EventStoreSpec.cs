@@ -246,7 +246,7 @@
         {
             using (var sess = Fixture.Store.Persistence.OpenSession(suppressAmbientTransaction: true))
             {
-                var commits = await sess.LoadCommits(streamId).ConfigureAwait(false);
+                var commits = await sess.LoadCommitsAsync(streamId).ConfigureAwait(false);
                 return commits.IsEmpty;
             }
         }

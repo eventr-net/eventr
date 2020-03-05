@@ -1,9 +1,12 @@
 ﻿namespace EventR.Spec.Serialization
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using EventR.Abstractions;
     using KellermanSoftware.CompareNetObjects;
+    using KellermanSoftware.CompareNetObjects.TypeComparers;
     using Xunit;
 
     public abstract class SerializerSpec<T> : IClassFixture<T>
@@ -13,7 +16,11 @@
         {
             Expect.NotNull(fixture, nameof(fixture));
             Fixture = fixture;
-            Comparer = new CompareLogic();
+            var customComparer = new ShoppingCartItemArrayComparer(RootComparerFactory.GetRootComparer());
+            Comparer = new CompareLogic(new ComparisonConfig
+            {
+                CustomComparers = new List<BaseTypeComparer> { customComparer },
+            });
         }
 
         protected T Fixture { get; }
@@ -63,6 +70,7 @@
             var commit = new Commit();
 
             sut.Serialize(commit, new[] { expected });
+            var s = Encoding.UTF8.GetString(commit.Payload);
             var events = sut.Deserialize(commit);
             var actual = events[0];
 
@@ -129,6 +137,7 @@
             var events = Fixture.EventsFromDomain;
 
             sut.Serialize(commit, events);
+            var s = Encoding.UTF8.GetString(commit.Payload);
             var eventsDeserialized = sut.Deserialize(commit);
 
             Assert.True(
@@ -147,7 +156,7 @@
 
         protected virtual string CreateMessage(string originalMessage, params object[] args)
         {
-            var append = $" ; using fixture {typeof(T).Name} configured as {Fixture.Description}";
+            var append = $" Using fixture {typeof(T).Name} configured as {Fixture.Description}";
             return args != null && args.Length > 0
                 ? string.Format(originalMessage, args) + append
                 : originalMessage + append;

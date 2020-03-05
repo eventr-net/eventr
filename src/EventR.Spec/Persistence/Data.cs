@@ -65,7 +65,7 @@
             {
                 foreach (var commit in CreateValidCommits(n))
                 {
-                    await sess.Save(commit).ConfigureAwait(false);
+                    await sess.SaveAsync(commit).ConfigureAwait(false);
                 }
             }
 
@@ -76,7 +76,7 @@
         {
             using (var sess = persistence.OpenSession())
             {
-                return await sess.LoadCommits(streamId).ConfigureAwait(false);
+                return await sess.LoadCommitsAsync(streamId).ConfigureAwait(false);
             }
         }
 

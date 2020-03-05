@@ -1,5 +1,5 @@
 param (
-    [ValidatePattern('^\d+(\.\d+){2}$')][string] $Version = '1.0.0',
+    [ValidatePattern('^\d+(\.\d+){2}(\-rc\d+)?$')][string] $Version = '1.0.0',
     [ValidateSet('Debug', 'Release')][string] $Configuration = 'Release',
     [string] $ForceNugetPackagesRoot,
     [string] $NuGetApiKey,
@@ -19,6 +19,7 @@ function Get-NugetGlobalPackagesPath {
 }
 
 # config
+$SlnFile = 'eventr.sln'
 $Dotnet = 'dotnet'
 $Nuget = 'nuget'
 $NugetFeedUrl = 'https://api.nuget.org/v3/index.json'
@@ -62,12 +63,12 @@ Write-NugetInfo -NugetPath $Nuget
 # cleanup
 Write-Host '>>> Cleaning solution >>>' -ForegroundColor Yellow
 Get-ChildItem .\ -Include bin,obj,publish,packages -Recurse | ForEach-Object {
-    Remove-Item $_.FullName -Force -Recurse
+    Remove-Item $_.FullName -Force -Recurse -ErrorAction SilentlyContinue
 }
 
 # build projects
-Write-Host '>>> Building eventr.sln >>>' -ForegroundColor Yellow
-& $Dotnet build 'eventr.sln' -c $Configuration -v $Verbosity /p:Version=$Version /p:RestorePackagesPath=$NugetPackagesRoot /p:CodeAnalysis=$CodeAnalysis /p:WarningsAsErrors=$Warnings /nologo
+Write-Host ">>> Building $SlnFile >>>" -ForegroundColor Yellow
+& $Dotnet build $SlnFile -c $Configuration -v $Verbosity /p:Version=$Version /p:RestorePackagesPath=$NugetPackagesRoot /p:CodeAnalysis=$CodeAnalysis /p:WarningsAsErrors=$Warnings /nologo
 Get-ChildItem '.\src' -Include '*.csproj' -Recurse | ForEach-Object {
     $projName = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName)
     Write-Host ">>> Packaging $projName >>>" -ForegroundColor Yellow

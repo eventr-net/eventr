@@ -3,6 +3,7 @@
     using EventR.Abstractions;
     using EventR.InMemory;
     using EventR.Spec.Persistence;
+    using System.Threading.Tasks;
 
     public sealed class InMemoryPersistenceSpecFixture : IPersistenceSpecFixture
     {
@@ -29,22 +30,19 @@
             disposed = true;
         }
 
-        public bool HasBeenSaved(Commit expected, out string errorDetail)
+        public Task<(bool ok, string errorDetail)> HasBeenSavedAsync(Commit expected)
         {
             if (!persistence.Storage.TryGetValue(expected.StreamId, out var commits))
             {
-                errorDetail = $"no commit stream '{expected.StreamId}' has been found";
-                return false;
+                return Task.FromResult((false, $"no commit stream '{expected.StreamId}' has been found"));
             }
 
-            if (!commits.TryGetValue(expected.Version, out var found))
+            if (!commits.TryGetValue(expected.Version, out var _))
             {
-                errorDetail = $"commit stream '{expected.StreamId}' does not contain version {expected.Version}";
-                return false;
+                return Task.FromResult((false, $"commit stream '{expected.StreamId}' does not contain version {expected.Version}"));
             }
 
-            errorDetail = null;
-            return true;
+            return Task.FromResult<(bool, string)>((true, null));
         }
     }
 }

@@ -48,6 +48,8 @@
         /// </summary>
         public PayloadLayout PayloadLayout { get; set; }
 
+        public bool HasPayloadLayout => PayloadLayout != null && !PayloadLayout.IsEmpty;
+
         /// <summary>
         /// Checks properties of the instance and throws <see cref="InvalidPersistenceDataException"/> if it finds
         /// something invalid.
