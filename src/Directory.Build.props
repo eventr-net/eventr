@@ -13,7 +13,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright (c) 2019 Jan Dvorak</Copyright>
     <Authors>Jan Dvorak</Authors>
-    <CodeAnalysisRuleSet Condition="'$(CodeAnalysis)'!='False'">..\..\eventr.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(CodeAnalysis)'!='False'">..\..\shared-solution-files\eventr.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors Condition="'$(WarningsAsErrors)'=='True'">true</TreatWarningsAsErrors>
   </PropertyGroup>
 
