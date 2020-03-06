@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(LibTargetFramework)</TargetFramework>
+    <PackageDescription>EventR library that binds serialization and persistence extensions together and through which the core functionality is provided.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

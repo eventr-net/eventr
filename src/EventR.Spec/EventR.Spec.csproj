@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>$(LibTargetFramework)</TargetFramework>
     <IsTestProject>false</IsTestProject>
+    <PackageDescription>EventR library defining test suites that every extension to EventR ecosystem must pass to be accepted. Also contains few utils that make testing easier.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

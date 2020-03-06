@@ -11,6 +11,7 @@
     <PackageIcon>logo_128.png</PackageIcon>
     <PackageTags>event-sourcing; database; persistence</PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Copyright (c) 2019 Jan Dvorak</Copyright>
     <Authors>Jan Dvorak</Authors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysis)'!='False'">..\..\shared-solution-files\eventr.ruleset</CodeAnalysisRuleSet>

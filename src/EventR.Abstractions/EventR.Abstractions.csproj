@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(LibTargetFramework)</TargetFramework>
+    <PackageDescription>EventR library with public contracts and common utils.</PackageDescription>
   </PropertyGroup>
 
   <!-- ../Directory.Build.props is merged automatically with this file -->
