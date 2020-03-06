@@ -15,6 +15,7 @@
     <Authors>Jan Dvorak</Authors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysis)'!='False'">..\..\shared-solution-files\eventr.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors Condition="'$(WarningsAsErrors)'=='True'">true</TreatWarningsAsErrors>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(CodeAnalysis)'!='False'">
