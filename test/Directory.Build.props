@@ -12,7 +12,8 @@
     <PackageReference Include="xunit" Version="$(XunitVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="CompareNETObjects" Version="$(CompareNETObjectsVersion)" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" PrivateAssets="all"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" PrivateAssets="all" />
+    <PackageReference Include="Appveyor.TestLogger" Version="$(AppveyorTestLoggerVersion)" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

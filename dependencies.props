@@ -9,6 +9,7 @@
     <TestSdkVersion>16.5.0</TestSdkVersion>
     <MoqVersion>4.13.1</MoqVersion>
     <XunitVersion>2.4.1</XunitVersion>
+    <AppveyorTestLoggerVersion>2.0.0</AppveyorTestLoggerVersion>
     <CompareNETObjectsVersion>4.65.0</CompareNETObjectsVersion>
     <MicrosoftExtensionsVersion>2.2.0</MicrosoftExtensionsVersion>
   </PropertyGroup>
