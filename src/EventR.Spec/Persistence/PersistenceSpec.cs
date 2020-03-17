@@ -22,6 +22,7 @@
 
         [Fact]
         [Trait(Name.Category, Value.Integration)]
+        [Trait(Name.Transaction, Value.Distributed)]
         public async Task ShouldAcceptChangesWhenEnlistedInAmbientTransaction()
         {
             var commits = Data.CreateValidCommits(2);
