@@ -16,14 +16,31 @@
             var ver = 0;
             for (var i = 0; i < count; i++)
             {
+                if (i == 0) // first
+                {
+                    result[i] = new Commit
+                    {
+                        Id = TimeGuid.NewId(),
+                        StreamId = Guid.NewGuid().ToString("N").Substring(24),
+                        Version = ++ver,
+                        ItemsCount = 1,
+                        SerializerId = "text",
+                        Payload = Payload1,
+                        PayloadLayout = null,
+                    };
+                    continue;
+                }
+
+                var isOdd = i % 2 == 1;
                 result[i] = new Commit
                 {
                     Id = TimeGuid.NewId(),
                     StreamId = Guid.NewGuid().ToString("N").Substring(24),
                     Version = ++ver,
-                    ItemsCount = 1,
-                    SerializerId = "text/utf-8",
-                    Payload = TestPayload1,
+                    ItemsCount = isOdd ? (short)2 : (short)1,
+                    SerializerId = "text",
+                    Payload = isOdd ? Payload2 : Payload1,
+                    PayloadLayout = isOdd ? Layout2 : Layout1,
                 };
             }
 
@@ -117,9 +134,40 @@
             }
         }
 
-        public static readonly byte[] TestPayload1 = Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consectetur adipiscing " +
+        public static readonly byte[] Payload1 = Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consectetur adipiscing " +
             "elit. Etiam tempus scelerisque cursus. Suspendisse vehicula risus at tincidunt egestas. In vel turpis facilisis, " +
             "feugiat ante accumsan, imperdiet justo. Donec eu eleifend leo. Phasellus risus sapien, blandit et ex at, placerat " +
             "ultrices augue. Vestibulum ut rutrum neque. In ac mollis massa, nec ultrices dui.");
+
+        public static readonly byte[] Payload2 = CreatePayload2();
+
+        public static readonly PayloadLayout Layout1 = CreateLayout1();
+
+        public static readonly PayloadLayout Layout2 = CreateLayout2();
+
+        private static byte[] CreatePayload2()
+        {
+            var c2 = Encoding.UTF8.GetBytes("One ring to rule them all, one ring to find them, " +
+                "One ring to bring them all and in the darkness bind them.");
+            var payload = new byte[Payload1.Length + c2.Length];
+            Array.Copy(Payload1, 0, payload, 0, Payload1.Length);
+            Array.Copy(c2, 0, payload, Payload1.Length, c2.Length);
+            return payload;
+        }
+
+        private static PayloadLayout CreateLayout1()
+        {
+            var pl = new PayloadLayout(1);
+            pl.Add(0, Payload1.Length, "System.String");
+            return pl;
+        }
+
+        private static PayloadLayout CreateLayout2()
+        {
+            var pl = new PayloadLayout(2);
+            pl.Add(0, Payload1.Length, "System.String");
+            pl.Add(Payload1.Length, Payload2.Length, "System.String");
+            return pl;
+        }
     }
 }

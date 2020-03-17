@@ -7,10 +7,10 @@
     [Serializable]
     public class TestSubCase
     {
-        [DataMember]
+        [DataMember(Order = 1)]
         public int TheInt { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 2)]
         public string TheString { get; set; }
     }
 }

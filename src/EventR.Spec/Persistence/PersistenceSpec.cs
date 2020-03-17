@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
+    using static EventR.Spec.Traits;
     using Util = EventR.Spec.Util;
 
     public abstract class PersistenceSpec<T> : IClassFixture<T>
@@ -20,6 +21,7 @@
         protected T Fixture { get; }
 
         [Fact]
+        [Trait(Name.Category, Value.Integration)]
         public async Task ShouldAcceptChangesWhenEnlistedInAmbientTransaction()
         {
             var commits = Data.CreateValidCommits(2);
@@ -46,6 +48,7 @@
         }
 
         [Fact]
+        [Trait(Name.Category, Value.Integration)]
         public async Task ShouldDropChangesWhenEnlistedInAmbientTransactionAndNotCompleted()
         {
             var c1 = Data.CreateValidCommits(1).First();
@@ -65,6 +68,7 @@
         }
 
         [Fact]
+        [Trait(Name.Category, Value.Integration)]
         public async Task ShouldIgnoreAmbientTransactionIfRequested()
         {
             var c1 = Data.CreateValidCommits(1).First();
@@ -85,6 +89,7 @@
         }
 
         [Fact]
+        [Trait(Name.Category, Value.Integration)]
         public async Task ShouldNotRequireAmbientTransaction()
         {
             var c1 = Data.CreateValidCommits(1).First();
@@ -101,6 +106,7 @@
         }
 
         [Fact]
+        [Trait(Name.Category, Value.Integration)]
         public async Task ShouldNotAllowSavingCommitsWithSameStreamIdAndVersion()
         {
             var commits = Data.CreateValidCommits(2);
@@ -127,6 +133,7 @@
 
         [Theory]
         [MemberData(nameof(Data.ValidCommits), MemberType = typeof(Data))]
+        [Trait(Name.Category, Value.Integration)]
         public async Task ValidCommitsShouldBeSaved(Commit validCommit, int testIndex)
         {
             var sut = Fixture.Persistence;
@@ -139,6 +146,7 @@
 
         [Theory]
         [MemberData(nameof(Data.InvalidCommits), MemberType = typeof(Data))]
+        [Trait(Name.Category, Value.Unit)]
         public async Task InvalidCommitsShouldBeRejected(Commit invalidCommit, int testIndex)
         {
             var sut = Fixture.Persistence;
@@ -149,6 +157,7 @@
         }
 
         [Fact]
+        [Trait(Name.Category, Value.Unit)]
         public async Task SaveCommitShouldThrowOnNullArg()
         {
             var sut = Fixture.Persistence;
@@ -159,6 +168,7 @@
         }
 
         [Fact]
+        [Trait(Name.Category, Value.Unit)]
         public async Task LoadCommitsShouldThrowOnNullArg()
         {
             var sut = Fixture.Persistence;
@@ -170,6 +180,7 @@
         }
 
         [Fact]
+        [Trait(Name.Category, Value.Integration)]
         public async Task DeleteStream()
         {
             var c1 = Data.CreateValidCommits(1).First();

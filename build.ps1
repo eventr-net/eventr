@@ -1,15 +1,17 @@
 param (
     [ValidatePattern('^\d+(\.\d+){2}$')][string] $Version = '1.0.0',
     [ValidateSet('Debug', 'Release')][string] $Configuration = 'Release',
-    [string] $ForceNugetPackagesRoot,    
+    [string] $ForceNugetPackagesRoot,
     [switch] $SkipCodeAnalysis,
     [switch] $WarningsAsErrors,
     [switch] $Verbose,
     [switch] $RunTests,
+    [switch] $RunIntegrationTests,
     [switch] $CreatePackages,
     [switch] $PublishToNuGet,
     [switch] $PublishLocally,
-    [string] $NuGetApiKey
+    [string] $NuGetApiKey,
+    [string] $TestsFilter
 )
 
 . shared-solution-files\functions.ps1
@@ -41,22 +43,24 @@ Get-LastExecErrorAndExitIfExists 'The build has failed'
 
 # unit tests
 if ($RunTests -or $PublishToNuGet -or $PublishLocally) {
-    Get-ChildItem './test' -Include '*.Tests.csproj' -Recurse | ForEach-Object {
-        $projName = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName)
-        Write-Debug "Running unit tests $projName"
-        & $global:DOTNET_PATH test $_.FullName -c $Configuration -v $Verbosity --no-build --no-restore /nologo
-        Get-LastExecErrorAndExitIfExists "One or more tests have failed while running $projName"
-    }
+    Write-Label "Running unit tests"
+    Invoke-Tests '*.Tests.csproj' -Configuration $Configuration -Verbosity $Verbosity -Filter $TestsFilter
+}
+
+# integration tests
+if ($RunIntegrationTests) {
+    Write-Label "Running integration tests"
+    Invoke-Tests '*.IntegrationTests.csproj' -Configuration $Configuration -Verbosity $Verbosity -Filter $TestsFilter
 }
 
 # create packages
-if ($CreatePackages -or $PublishToNuGet -or $PublishLocally) {    
+if ($CreatePackages -or $PublishToNuGet -or $PublishLocally) {
     Get-ChildItem './src' -Include '*.csproj' -Recurse | ForEach-Object {
         $projName = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName)
         Write-Debug "Packaging $projName"
         & $global:DOTNET_PATH pack $_.FullName -c $Configuration -o $global:PUBLISH_DIR -v $Verbosity --no-build --no-restore /p:Version=$Version /nologo
         Get-LastExecErrorAndExitIfExists "Failed to package $projName"
-    }    
+    }
 }
 
 # publish

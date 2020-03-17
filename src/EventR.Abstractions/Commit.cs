@@ -44,7 +44,8 @@
         public byte[] Payload { get; set; }
 
         /// <summary>
-        ///
+        /// Some serializer does not have ability to fully describe collection of serialized types within the Payload itself.
+        /// In such cases the PayloadLayout will help to find offset and length inside Payload's byte array for each serialized object.
         /// </summary>
         public PayloadLayout PayloadLayout { get; set; }
 

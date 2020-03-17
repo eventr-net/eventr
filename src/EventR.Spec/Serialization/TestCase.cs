@@ -7,52 +7,52 @@
     [Serializable]
     public class TestCase
     {
-        [DataMember]
+        [DataMember(Order = 1)]
         public string TheString { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 2)]
         public string NullString { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 3)]
         public int TheInt { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 4)]
         public int? NullableInt { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 5)]
         public uint TheUInt { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 6)]
         public uint? NullableUInt { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 7)]
         public bool TheBoolean { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 8)]
         public bool? NullableBoolean { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 9)]
         public Guid TheGuid { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 10)]
         public Guid? NullableGuid { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 11)]
         public DateTime DateTime { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 12)]
         public DateTime? NullableDateTime { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 13)]
         public string[] ArrayOfStrings { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 14)]
         public int[] ArrayOfInt { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 15)]
         public TestSubCase SubCase { get; set; }
 
-        [DataMember]
+        [DataMember(Order = 16)]
         public TestSubCase[] ArrayOfSubCases { get; set; }
     }
 }

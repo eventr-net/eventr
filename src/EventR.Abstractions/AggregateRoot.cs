@@ -64,7 +64,9 @@
         /// <summary>
         /// Collection of events that have yet not been persisted.
         /// </summary>
-        internal object[] UncommitedEvents => uncommitedEvents.ToArray();
+        public object[] UncommitedEvents => uncommitedEvents.ToArray();
+
+        public bool HasUncommitedEvents => uncommitedEvents.Any();
 
         internal void MarkAsCommited()
         {
@@ -82,8 +84,6 @@
                 CurrentVersion = 0;
             }
         }
-
-        internal bool HasUncommitedEvents => uncommitedEvents.Any();
 
         /// <summary>
         /// Entry method for re-hydration; that is re-playing persisted events on new root aggregate instance.

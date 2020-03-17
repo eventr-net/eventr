@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.Serialization;
     using System.Text;
 
 #pragma warning disable SA1402 // File may only contain a single type
@@ -89,6 +90,7 @@
     }
 
     [Serializable]
+    [DataContract]
     public abstract class SerializationCase<T>
     {
         protected SerializationCase(T value)
@@ -97,15 +99,18 @@
             TypeName = typeof(T).Name;
         }
 
+        [DataMember(Order = 1)]
         public T Value { get; set; }
 
+        [DataMember(Order = 2)]
         public string TypeName { get; set; }
     }
 
     [Serializable]
+    [DataContract]
     public class ByteCase : SerializationCase<byte>
     {
-        private ByteCase()
+        public ByteCase()
             : base(0)
         { }
 
@@ -115,9 +120,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class NullableByteCase : SerializationCase<byte?>
     {
-        private NullableByteCase()
+        public NullableByteCase()
             : base(null)
         { }
 
@@ -127,9 +133,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class IntCase : SerializationCase<int>
     {
-        private IntCase()
+        public IntCase()
             : base(0)
         { }
 
@@ -139,9 +146,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class NullableIntCase : SerializationCase<int?>
     {
-        private NullableIntCase()
+        public NullableIntCase()
             : base(null)
         { }
 
@@ -151,9 +159,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class LongCase : SerializationCase<long>
     {
-        private LongCase()
+        public LongCase()
             : base(0L)
         { }
 
@@ -163,9 +172,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class NullableLongCase : SerializationCase<long?>
     {
-        private NullableLongCase()
+        public NullableLongCase()
             : base(null)
         { }
 
@@ -175,9 +185,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class DoubleCase : SerializationCase<double>
     {
-        private DoubleCase()
+        public DoubleCase()
             : base(0d)
         { }
 
@@ -187,9 +198,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class NullableDoubleCase : SerializationCase<double?>
     {
-        private NullableDoubleCase()
+        public NullableDoubleCase()
             : base(null)
         { }
 
@@ -199,9 +211,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class DecimalCase : SerializationCase<decimal>
     {
-        private DecimalCase()
+        public DecimalCase()
             : base(0m)
         { }
 
@@ -211,9 +224,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class NullableDecimalCase : SerializationCase<decimal?>
     {
-        private NullableDecimalCase()
+        public NullableDecimalCase()
             : base(null)
         { }
 
@@ -223,9 +237,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class BoolCase : SerializationCase<bool>
     {
-        private BoolCase()
+        public BoolCase()
             : base(false)
         { }
 
@@ -235,9 +250,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class NullableBoolCase : SerializationCase<bool?>
     {
-        private NullableBoolCase()
+        public NullableBoolCase()
             : base(null)
         { }
 
@@ -247,9 +263,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class GuidCase : SerializationCase<Guid>
     {
-        private GuidCase()
+        public GuidCase()
             : base(Guid.Empty)
         { }
 
@@ -259,9 +276,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class NullableGuidCase : SerializationCase<Guid?>
     {
-        private NullableGuidCase()
+        public NullableGuidCase()
             : base(null)
         { }
 
@@ -271,9 +289,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class TimeSpanCase : SerializationCase<TimeSpan>
     {
-        private TimeSpanCase()
+        public TimeSpanCase()
             : base(TimeSpan.Zero)
         { }
 
@@ -283,9 +302,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class NullableTimeSpanCase : SerializationCase<TimeSpan?>
     {
-        private NullableTimeSpanCase()
+        public NullableTimeSpanCase()
             : base(null)
         { }
 
@@ -295,9 +315,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class DateTimeCase : SerializationCase<DateTime>
     {
-        private DateTimeCase()
+        public DateTimeCase()
             : base(DateTime.MinValue)
         { }
 
@@ -307,9 +328,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class NullableDateTimeCase : SerializationCase<DateTime?>
     {
-        private NullableDateTimeCase()
+        public NullableDateTimeCase()
             : base(null)
         { }
 
@@ -319,9 +341,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class StringCase : SerializationCase<string>
     {
-        private StringCase()
+        public StringCase()
             : base(null)
         { }
 
@@ -331,9 +354,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class ArrayOfStringsCase : SerializationCase<string[]>
     {
-        private ArrayOfStringsCase()
+        public ArrayOfStringsCase()
             : base(null)
         { }
 
@@ -343,9 +367,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class ArrayOfIntsCase : SerializationCase<int[]>
     {
-        private ArrayOfIntsCase()
+        public ArrayOfIntsCase()
             : base(null)
         { }
 
@@ -355,9 +380,10 @@
     }
 
     [Serializable]
+    [DataContract]
     public class ArrayOfBytesCase : SerializationCase<byte[]>
     {
-        private ArrayOfBytesCase()
+        public ArrayOfBytesCase()
             : base(null)
         { }
 
