@@ -19,8 +19,8 @@
             Quantity = quantity;
         }
 
-        // Most serializers have trouble when parameterless ctor is not available
-        private ShoppingCartItem()
+        // Some serializers have trouble when parameterless ctor is not available
+        public ShoppingCartItem()
         { }
     }
 }

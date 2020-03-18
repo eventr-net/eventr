@@ -1,7 +1,11 @@
-﻿namespace EventR.Spec.Domain.Events
+﻿using System.Runtime.Serialization;
+
+namespace EventR.Spec.Domain.Events
 {
+    [DataContract]
     public class TerminateCustomerAccount
     {
-         public TerminateReason Reason { get; set; }
+        [DataMember(Order = 1)]
+        public TerminateReason Reason { get; set; }
     }
 }

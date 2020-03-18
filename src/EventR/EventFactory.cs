@@ -61,7 +61,6 @@
         public Type GetOriginalType(Type concreteType)
         {
             Expect.NotNull(concreteType, "concreteType");
-            // ReSharper disable once InconsistentlySynchronizedField
             return Cache.Where(kvp => kvp.Value == concreteType).Select(kvp => kvp.Key).FirstOrDefault();
         }
 
@@ -109,11 +108,16 @@
             typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
             typeBuilder.AddInterfaceImplementation(type);
 
+            var dataContactAttr = new CustomAttributeBuilder(
+                typeof(DataContractAttribute).GetConstructor(Array.Empty<Type>()),
+                Array.Empty<object>());
+            typeBuilder.SetCustomAttribute(dataContactAttr);
+
             const MethodAttributes methodAttrs =
                 MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig
                 | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.VtableLayoutMask;
 
-            foreach (var propInfo in GetPropertyInfo(type))
+            foreach (var (propInfo, dataMemberAttr) in GetPropertyInfo(type))
             {
                 var propName = propInfo.Name;
                 var propType = propInfo.PropertyType;
@@ -143,14 +147,37 @@
 
                 propBuilder.SetGetMethod(getMethodBuilder);
                 propBuilder.SetSetMethod(setMethodBuilder);
+                if (dataMemberAttr != null)
+                {
+                    propBuilder.SetCustomAttribute(DataMember(dataMemberAttr));
+                }
             }
 
             return typeBuilder.CreateTypeInfo();
         }
 
-        private static IEnumerable<PropertyInfo> GetPropertyInfo(Type type)
+        private static CustomAttributeBuilder DataMember(DataMemberAttribute dma)
         {
-            var propertyInfo = new List<PropertyInfo>(type.GetProperties());
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
+            var dmaType = typeof(DataMemberAttribute);
+            var dmaProps = new[]
+            {
+                dmaType.GetProperty("Name", flags),
+                dmaType.GetProperty("Order", flags),
+                dmaType.GetProperty("IsRequired", flags),
+                dmaType.GetProperty("EmitDefaultValue", flags),
+            };
+
+            return new CustomAttributeBuilder(
+                dmaType.GetConstructor(Array.Empty<Type>()),
+                Array.Empty<object>(),
+                dmaProps,
+                new object[] { dma.Name, dma.Order, dma.IsRequired, dma.EmitDefaultValue });
+        }
+
+        private static IEnumerable<(PropertyInfo, DataMemberAttribute)> GetPropertyInfo(Type type)
+        {
+            var propertyInfo = type.GetProperties().Select(x => (x, x.GetCustomAttribute<DataMemberAttribute>())).ToList();
             foreach (var subType in type.GetInterfaces())
             {
                 propertyInfo.AddRange(GetPropertyInfo(subType));
