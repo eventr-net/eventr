@@ -1,16 +1,17 @@
 <Project>
 
   <PropertyGroup>
-    <FxCopAnalyzersVersion>2.9.8</FxCopAnalyzersVersion>
+    <FxCopAnalyzersVersion>3.0.0</FxCopAnalyzersVersion>
     <StyleCopAnalyzersVersion>1.1.118</StyleCopAnalyzersVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TestSdkVersion>16.5.0</TestSdkVersion>
-    <MoqVersion>4.13.1</MoqVersion>
+    <TestSdkVersion>16.6.1</TestSdkVersion>
+    <MoqVersion>4.14.5</MoqVersion>
     <XunitVersion>2.4.1</XunitVersion>
+    <XunitRunnerVersion>2.4.2</XunitRunnerVersion>
     <AppveyorTestLoggerVersion>2.0.0</AppveyorTestLoggerVersion>
-    <CompareNETObjectsVersion>4.65.0</CompareNETObjectsVersion>
+    <CompareNETObjectsVersion>4.66.0</CompareNETObjectsVersion>
     <MicrosoftExtensionsVersion>2.2.0</MicrosoftExtensionsVersion>
   </PropertyGroup>
 
