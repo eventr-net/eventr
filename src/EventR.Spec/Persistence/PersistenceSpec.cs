@@ -25,7 +25,11 @@
         [Trait(Name.Transaction, Value.Distributed)]
         public async Task ShouldAcceptChangesWhenEnlistedInAmbientTransaction()
         {
-            var commits = Data.CreateValidCommits(2);
+            // Commits must be from same stream, because when employing sharding
+            // it is likely that commits from random streams would be persisted on different hosts
+            // which would lead to distributed transactions.
+            // Distributed transaction might not be supported based on environment and actual persistence driver.
+            var commits = Data.CreateValidCommits(2, forceStreamId: Guid.NewGuid().ToString("N").Substring(24));
             var c1 = commits[0];
             var c2 = commits[1];
             var sut = Fixture.Persistence;

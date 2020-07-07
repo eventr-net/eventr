@@ -10,7 +10,7 @@
 
     public static class Data
     {
-        public static Commit[] CreateValidCommits(int count)
+        public static Commit[] CreateValidCommits(int count, string forceStreamId = null)
         {
             var result = new Commit[count];
             var ver = 0;
@@ -21,7 +21,7 @@
                     result[i] = new Commit
                     {
                         Id = TimeGuid.NewId(),
-                        StreamId = Guid.NewGuid().ToString("N").Substring(24),
+                        StreamId = forceStreamId ?? Guid.NewGuid().ToString("N").Substring(24),
                         Version = ++ver,
                         ItemsCount = 1,
                         SerializerId = "text",
@@ -35,7 +35,7 @@
                 result[i] = new Commit
                 {
                     Id = TimeGuid.NewId(),
-                    StreamId = Guid.NewGuid().ToString("N").Substring(24),
+                    StreamId = forceStreamId ?? Guid.NewGuid().ToString("N").Substring(24),
                     Version = ++ver,
                     ItemsCount = isOdd ? (short)2 : (short)1,
                     SerializerId = "text",
